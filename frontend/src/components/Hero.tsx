@@ -33,9 +33,6 @@ export default function Hero() {
       {/* HERO CONTENT */}
       <div className="container hero-content-wrap">
         <div className="hero-content">
-          <div className="hero-location">
-            Dharamshala, Himachal Pradesh, India &mdash; Just a flight and 45-min cab drive from New Delhi
-          </div>
           <h1 className="hero-title">Yes, you deserve a break</h1>
           <p className="hero-subtitle">
             It&apos;s time for meditative holidays in the Himalayas. Discover an all-inclusive mountain sanctuary combining active meditations, restful silence, cedar forests, and conscious living.

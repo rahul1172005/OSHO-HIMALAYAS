@@ -437,12 +437,12 @@ img {
 
 .hero-location {
   font-size: 0.88rem;
-  color: rgba(255, 255, 255, 0.95);
+  color: #000000;
   margin-bottom: 22px;
   letter-spacing: 0.04em;
   font-weight: 500;
   text-transform: uppercase;
-  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+  text-shadow: none;
 }
 
 .hero-title {
@@ -451,18 +451,18 @@ img {
   line-height: 1.04;
   margin-bottom: 26px;
   letter-spacing: -0.04em;
-  color: #ffffff;
-  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.25);
+  color: #000000;
+  text-shadow: none;
 }
 
 .hero-subtitle {
   font-size: clamp(1.2rem, 2vw, 1.4rem);
-  color: rgba(255, 255, 255, 0.95);
+  color: #000000;
   font-weight: 300;
   line-height: 1.65;
   margin-bottom: 42px;
   max-width: 720px;
-  text-shadow: 0 1px 6px rgba(0, 0, 0, 0.25);
+  text-shadow: none;
 }
 
 .hero-ctas {
