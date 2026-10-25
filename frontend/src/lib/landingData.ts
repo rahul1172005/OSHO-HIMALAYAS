@@ -1,0 +1,359 @@
+export interface ReelItem {
+  id: string;
+  title: string;
+  buttonLabel: string;
+  thumbnail: string;
+  videoType: "instagram" | "drive" | "youtube";
+  videoUrl: string;
+  embedUrl: string;
+}
+
+export interface ScheduleCourse {
+  id: string;
+  title: string;
+  dates: string;
+  tagline: string;
+  image: string;
+  enquiryUrl?: string;
+}
+
+export interface TestimonialReview {
+  id: string;
+  name: string;
+  location: string;
+  quote: string;
+  youtubeId: string;
+  thumbnail: string;
+}
+
+export interface FaqItem {
+  question: string;
+  answer: string | string[];
+}
+
+// -----------------------------------------------------------------------------
+// SECTION 2: KAYAL-STYLE REEL SHOWCASE
+// -----------------------------------------------------------------------------
+export const REEL_ITEMS: ReelItem[] = [
+  {
+    id: "campus",
+    title: "Campus",
+    buttonLabel: "Campus",
+    thumbnail: "https://oshohimalayascom.swipepages.media/2025/9/65426ca89707d10018b3de0d/20.jpg",
+    videoType: "instagram",
+    videoUrl: "https://www.instagram.com/reel/DDeZzlSTfCQ/",
+    embedUrl: "https://www.instagram.com/reel/DDeZzlSTfCQ/embed/",
+  },
+  {
+    id: "meditations",
+    title: "Meditations",
+    buttonLabel: "Meditations",
+    thumbnail: "https://oshohimalayascom.swipepages.media/2026/8/65426ca89707d10018b3de0d/shiva-sakthi-500.webp",
+    videoType: "drive",
+    videoUrl: "https://drive.google.com/file/d/1oLJ-zPX1VbIHG6yZGTQ9O2GsOm2_lM-5/view?usp=sharing",
+    embedUrl: "https://drive.google.com/file/d/1oLJ-zPX1VbIHG6yZGTQ9O2GsOm2_lM-5/preview",
+  },
+  {
+    id: "weather",
+    title: "Weather",
+    buttonLabel: "Weather",
+    thumbnail: "https://oshohimalayascom.swipepages.media/2026/8/65426ca89707d10018b3de0d/untitled-design--7--1500.webp",
+    videoType: "drive",
+    videoUrl: "https://drive.google.com/file/d/13NTMqWTjSZ888CYp8hUdKwCkbcqileAW/view?usp=sharing",
+    embedUrl: "https://drive.google.com/file/d/13NTMqWTjSZ888CYp8hUdKwCkbcqileAW/preview",
+  },
+  {
+    id: "people",
+    title: "People",
+    buttonLabel: "People",
+    thumbnail: "https://oshohimalayascom.swipepages.media/2026/8/65426ca89707d10018b3de0d/1-1.webp",
+    videoType: "instagram",
+    videoUrl: "https://www.instagram.com/p/DewaPd-oUKd/",
+    embedUrl: "https://www.instagram.com/p/DewaPd-oUKd/embed/",
+  },
+  {
+    id: "living-in",
+    title: "Living In",
+    buttonLabel: "Living In",
+    thumbnail: "https://oshohimalayascom.swipepages.media/2025/9/65426ca89707d10018b3de0d/1.jpg",
+    videoType: "instagram",
+    videoUrl: "https://www.instagram.com/p/C_YLK7eo41-/",
+    embedUrl: "https://www.instagram.com/p/C_YLK7eo41-/embed/",
+  },
+  {
+    id: "nature",
+    title: "Nature",
+    buttonLabel: "Nature",
+    thumbnail: "https://oshohimalayascom.swipepages.media/2026/8/65426ca89707d10018b3de0d/whatsapp-image-2026-08-01-at-08-24-07-1500.webp",
+    videoType: "instagram",
+    videoUrl: "https://www.instagram.com/p/Dejl1NpiDz5/",
+    embedUrl: "https://www.instagram.com/p/Dejl1NpiDz5/embed/",
+  },
+  {
+    id: "bonfire",
+    title: "Bonfire",
+    buttonLabel: "Bonfire",
+    thumbnail: "https://oshohimalayascom.swipepages.media/2026/8/65426ca89707d10018b3de0d/for-website-home-page.webp",
+    videoType: "instagram",
+    videoUrl: "https://www.instagram.com/p/De1j_PKI6vn/",
+    embedUrl: "https://www.instagram.com/p/De1j_PKI6vn/embed/",
+  },
+];
+
+// -----------------------------------------------------------------------------
+// SECTION 3: ELEAT-STYLE PHOTO CAROUSEL
+// -----------------------------------------------------------------------------
+export const GALLERY_PHOTOS: string[] = [
+  "https://oshohimalayascom.swipepages.media/2026/8/65426ca89707d10018b3de0d/1-1.webp",
+  "https://oshohimalayascom.swipepages.media/2026/8/65426ca89707d10018b3de0d/2-1.webp",
+  "https://oshohimalayascom.swipepages.media/2026/8/65426ca89707d10018b3de0d/3-1.webp",
+  "https://oshohimalayascom.swipepages.media/2026/8/65426ca89707d10018b3de0d/4-2.webp",
+  "https://oshohimalayascom.swipepages.media/2026/8/65426ca89707d10018b3de0d/5-1.webp",
+  "https://oshohimalayascom.swipepages.media/2026/8/65426ca89707d10018b3de0d/6-1.webp",
+  "https://oshohimalayascom.swipepages.media/2026/8/65426ca89707d10018b3de0d/7-1.webp",
+  "https://oshohimalayascom.swipepages.media/2026/8/65426ca89707d10018b3de0d/8-1.webp",
+  "https://oshohimalayascom.swipepages.media/2026/8/65426ca89707d10018b3de0d/9-1.webp",
+  "https://oshohimalayascom.swipepages.media/2026/8/65426ca89707d10018b3de0d/10-1.webp",
+  "https://oshohimalayascom.swipepages.media/2026/8/65426ca89707d10018b3de0d/11-1.webp",
+  "https://oshohimalayascom.swipepages.media/2026/8/65426ca89707d10018b3de0d/12-1.webp",
+  "https://oshohimalayascom.swipepages.media/2026/8/65426ca89707d10018b3de0d/13-2.webp",
+  "https://oshohimalayascom.swipepages.media/2026/8/65426ca89707d10018b3de0d/14-2.webp",
+  "https://oshohimalayascom.swipepages.media/2026/8/65426ca89707d10018b3de0d/15-1.webp",
+  "https://oshohimalayascom.swipepages.media/2026/8/65426ca89707d10018b3de0d/16-1.webp",
+  "https://oshohimalayascom.swipepages.media/2026/8/65426ca89707d10018b3de0d/17-1.webp",
+  "https://oshohimalayascom.swipepages.media/2026/8/65426ca89707d10018b3de0d/18-1.webp",
+  "https://oshohimalayascom.swipepages.media/2026/8/65426ca89707d10018b3de0d/19-1.webp",
+  "https://oshohimalayascom.swipepages.media/2025/9/65426ca89707d10018b3de0d/20.jpg",
+  "https://oshohimalayascom.swipepages.media/2025/9/65426ca89707d10018b3de0d/19.jpg",
+  "https://oshohimalayascom.swipepages.media/2025/9/65426ca89707d10018b3de0d/18.jpg",
+  "https://oshohimalayascom.swipepages.media/2025/9/65426ca89707d10018b3de0d/15.jpg",
+  "https://oshohimalayascom.swipepages.media/2025/9/65426ca89707d10018b3de0d/8.jpg",
+];
+
+// -----------------------------------------------------------------------------
+// SECTION 4: ELEAT-STYLE SCHEDULE CARDS
+// -----------------------------------------------------------------------------
+export const SCHEDULE_COURSES: ScheduleCourse[] = [
+  {
+    id: "shiva-shakti",
+    title: "Shiva Shakti Retreat",
+    dates: "Oct 29 - Nov 02",
+    tagline: "A colourful self-inquiry to discover the real you.",
+    image: "https://oshohimalayascom.swipepages.media/2026/8/65426ca89707d10018b3de0d/shiva-sakthi-500.webp",
+  },
+  {
+    id: "festival-of-lights",
+    title: "Festival of Lights",
+    dates: "Nov 06 – 10",
+    tagline: "Explore your inner light in nature.",
+    image: "https://oshohimalayascom.swipepages.media/2026/8/65426ca89707d10018b3de0d/festival-of-lights-500.webp",
+  },
+  {
+    id: "chakra-experience",
+    title: "The Chakra Experience",
+    dates: "Nov 12 - 16",
+    tagline: "An in-depth course to explore our seven energy centers through meditation.",
+    image: "https://oshohimalayascom.swipepages.media/2026/8/65426ca89707d10018b3de0d/the-chakra-experience-500.webp",
+  },
+  {
+    id: "tantra-alchemy",
+    title: "Tantra: The Inner Alchemy",
+    dates: "Nov 20 - 25",
+    tagline: "Meet yourself and life more fully.",
+    image: "https://oshohimalayascom.swipepages.media/2026/9/65426ca89707d10018b3de0d/osho-heart-festival--2--500.webp",
+  },
+  {
+    id: "vigyan-bhairav",
+    title: "Vigyan Bhairav Tantra",
+    dates: "Dec 03 - 07",
+    tagline: "Explore the depths of meditation.",
+    image: "https://oshohimalayascom.swipepages.media/2026/8/65426ca89707d10018b3de0d/vigyan-bhairav-tantra-500.webp",
+  },
+  {
+    id: "born-again",
+    title: "OSHO Born Again",
+    dates: "Dec 13 - 21",
+    tagline: "Get back your lost childhood.",
+    image: "https://oshohimalayascom.swipepages.media/2026/8/65426ca89707d10018b3de0d/osho-born-again-500.webp",
+  },
+  {
+    id: "path-of-love",
+    title: "Path of Love",
+    dates: "Dec 24 - 28",
+    tagline: "A course in conscious relating & intimacy.",
+    image: "https://oshohimalayascom.swipepages.media/2026/8/65426ca89707d10018b3de0d/path-of-love-500.webp",
+  },
+  {
+    id: "new-beginnings",
+    title: "New Beginnings Meditate & Celebrate",
+    dates: "Dec 29 - Jan 03",
+    tagline: "New Year, New You: Find Joy through Meditation.",
+    image: "https://oshohimalayascom.swipepages.media/2026/8/65426ca89707d10018b3de0d/new-beginnings_-meditate-and-celebrate-500.webp",
+  },
+  {
+    id: "silent-retreat",
+    title: "Meditation Intensive Silent Retreat",
+    dates: "Jan 13 - 17",
+    tagline: "Dive deep into your inner being.",
+    image: "https://oshohimalayascom.swipepages.media/2026/8/65426ca89707d10018b3de0d/29-2-300.webp",
+  },
+  {
+    id: "heart-sutra",
+    title: "The Heart Sutra",
+    dates: "Jan 22 - 26",
+    tagline: "Open Your Heart, Embrace Love: A Journey to Joy.",
+    image: "https://oshohimalayascom.swipepages.media/2026/3/65426ca89707d10018b3de0d/osho-heart-festival--23--500.webp",
+  },
+  {
+    id: "bodymind",
+    title: "OSHO Talking To Your BodyMind",
+    dates: "Jan 26 - Feb 03",
+    tagline: "Gain harmony in your body-mind.",
+    image: "https://oshohimalayascom.swipepages.media/2026/8/65426ca89707d10018b3de0d/5-3-300.webp",
+  },
+  {
+    id: "mystic-rose",
+    title: "OSHO Mystic Rose",
+    dates: "Feb 03 - 25",
+    tagline: "Let the scars of the past be dissolved.",
+    image: "https://oshohimalayascom.swipepages.media/2026/8/65426ca89707d10018b3de0d/osho-mystic-rose-500.webp",
+  },
+  {
+    id: "satori",
+    title: "Awareness Intensive: Satori",
+    dates: "Feb 26 - Mar 05",
+    tagline: "A retreat to know who you truly are.",
+    image: "https://oshohimalayascom.swipepages.media/2026/10/65426ca89707d10018b3de0d/rama---all-course-posters--7--500.webp",
+  },
+  {
+    id: "active-meditation-training",
+    title: "OSHO Active Meditation Training",
+    dates: "Mar 06 - 11",
+    tagline: "Get the most out of your meditation by knowing the science behind it.",
+    image: "https://oshohimalayascom.swipepages.media/2026/10/65426ca89707d10018b3de0d/rama---all-course-posters--1--500.webp",
+  },
+];
+
+// -----------------------------------------------------------------------------
+// SECTION 5: VIDEO TESTIMONIALS (DUPLICATES SECTION 2 FORMAT)
+// -----------------------------------------------------------------------------
+export const TESTIMONIAL_REVIEWS: TestimonialReview[] = [
+  {
+    id: "amura",
+    name: "Amura",
+    location: "Germany",
+    quote: "This is the place to discover freedom and peace.",
+    youtubeId: "fn-gh8eBn2g",
+    thumbnail: "https://oshohimalayascom.swipepages.media/2026/8/65426ca89707d10018b3de0d/5-500.webp",
+  },
+  {
+    id: "max",
+    name: "Max",
+    location: "Germany",
+    quote: "I can't wait to come back soon.",
+    youtubeId: "prJrDLDS25M",
+    thumbnail: "https://oshohimalayascom.swipepages.media/2026/8/65426ca89707d10018b3de0d/6-500.webp",
+  },
+  {
+    id: "ernst",
+    name: "Ernst",
+    location: "Netherlands",
+    quote: "A lot of nice people to be around here.",
+    youtubeId: "4qOl7yRLVFc",
+    thumbnail: "https://oshohimalayascom.swipepages.media/2026/8/65426ca89707d10018b3de0d/4-500.webp",
+  },
+  {
+    id: "greta",
+    name: "Greta",
+    location: "Poland",
+    quote: "I recommend anyone to come here at least once in life.",
+    youtubeId: "h8VuSZWMIUw",
+    thumbnail: "https://oshohimalayascom.swipepages.media/2026/8/65426ca89707d10018b3de0d/3-500.webp",
+  },
+  {
+    id: "kathleen-peter",
+    name: "Kathleen & Peter",
+    location: "Ireland",
+    quote: "We are already booking to come back in summer.",
+    youtubeId: "HmBChf8s6m4",
+    thumbnail: "https://oshohimalayascom.swipepages.media/2026/8/65426ca89707d10018b3de0d/2-500.webp",
+  },
+  {
+    id: "shilpa",
+    name: "Shilpa",
+    location: "India",
+    quote: "This place itself has such a high energy.",
+    youtubeId: "ycaGlod1fLI",
+    thumbnail: "https://oshohimalayascom.swipepages.media/2026/8/65426ca89707d10018b3de0d/1-500.webp",
+  },
+];
+
+// -----------------------------------------------------------------------------
+// SECTION 7: FAQS
+// -----------------------------------------------------------------------------
+export const FAQ_ITEMS: FaqItem[] = [
+  {
+    question: "I’m a beginner. How will I know which group would be best for me to start with?",
+    answer:
+      "Our team can help you with that. When filling out the form, help us understand your needs and expectations. We can suggest the best course for you.",
+  },
+  {
+    question: "What about the costs?",
+    answer: [
+      "We offer all-inclusive packages. They will cover your course fee, stay and food during your course, access to up to five Osho meditations daily, a swimming pool, library, and open gym.",
+      "The cost of these all-inclusive packages will vary depending on the type of accommodation you choose.",
+    ],
+  },
+  {
+    question: "Is Osho meditations for me?",
+    answer:
+      "Osho’s techniques are for everyone. In fact, for the modern man nothing works better than the meditations designed scientifically by Osho.",
+  },
+  {
+    question: "Why Osho’s methods are active?",
+    answer: [
+      "In Osho’s own words:",
+      "\"Then catharsis is needed to unburden the heart, to throw off suppressions, to make the heart open. If the heart becomes light and unburdened, then the center of consciousness is pushed still lower; it comes to the navel. The navel is the source of vitality, the seed source from which everything else comes: the body and the mind and everything.\"",
+    ],
+  },
+  {
+    question: "Do I have to be an Osho follower?",
+    answer: "No, we welcome all people who are interested in meditation.",
+  },
+  {
+    question: "How can I book my stay?",
+    answer:
+      "You can confirm your stay by paying 50% of the total cost. You may pay the remaining when you check-in.",
+  },
+  {
+    question: "What type of food is offered at Osho Himalayas?",
+    answer:
+      "We offer healthy, wholesome, fresh-cooked vegetarian food. Occasionally eggs are included. We endeavor to prepare our food with locally grown crops and vegetables to the best possible extent.",
+  },
+];
+
+// -----------------------------------------------------------------------------
+// SECTION 6: HOW TO REACH HERE
+// -----------------------------------------------------------------------------
+export const HOW_TO_REACH_INFO = {
+  title: "How To Reach Here:",
+  mapImage:
+    "https://oshohimalayascom.swipepages.media/2026/8/65426ca89707d10018b3de0d/chatgpt-image-aug-4--2026--11_04_35-pm-1500.webp",
+  bulletPoints: [
+    "THE BEST WAY: Daily flights are available from New Delhi to Dharamshala (Kangra/Gaggal/DHM Airport). Our resort is just a 45 cab drive from Dharamshala (DHM) Airport.",
+    "Other options: Several inter-state Volvo buses are available to Dharamshala from most northern cities of India, including New Delhi.",
+    "Vande Bharat Express train from New Delhi to Amb Andaura takes just 5:15 hours. A cab or a bus ride from Amb Andaura to OSHO Himalayas takes about 2:30 hours.",
+    "Let us know a few days in advance. We will help you get in touch with a local cab operator who is regular in this locality.",
+    "*This map is only for reference, not for scale.",
+  ],
+};
+
+// -----------------------------------------------------------------------------
+// SECTION 8: VIRTUAL CAMPUS TOUR
+// -----------------------------------------------------------------------------
+export const VIRTUAL_TOUR_INFO = {
+  kicker: "360° Experience",
+  title: "Virtual Campus Tour",
+  subtitle: "Click & swipe to move around 360 degrees! Use the icons on the sidebar too.",
+  matterportUrl: "https://my.matterport.com/show/?m=ZU3PmRumZQr",
+};

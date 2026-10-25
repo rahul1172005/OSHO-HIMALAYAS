@@ -1,61 +1,90 @@
-// ---------------------------------------------------------------------------
-// BACKGROUND VIDEO CONFIGURATION (Controlled directly within code)
-// Adjust fit, scale, x-axis, and y-axis directly here as desired:
-// ---------------------------------------------------------------------------
-const VIDEO_FIT: "contain" | "cover" | "fill" = "cover"; // "cover" = edge-to-edge bleed without letterbox bars; "contain" = entire video displayed with letterbox
-const VIDEO_SCALE = 1.0; // 1.0 = Full 100% video display
-const VIDEO_X = 0;       // Horizontal offset in pixels (+ moves right, - moves left)
-const VIDEO_Y = 0;       // Vertical offset in pixels (+ moves down, - moves up)
+"use client";
+
+import { useEffect, useState } from "react";
 
 export default function Hero() {
+  const [isMobile, setIsMobile] = useState(false);
+  const [mobileTextReady, setMobileTextReady] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+
+    // Mobile text appears after 6 seconds delay because video has intro text
+    const timer = setTimeout(() => {
+      setMobileTextReady(true);
+    }, 6000);
+
+    return () => {
+      window.removeEventListener("resize", checkMobile);
+      clearTimeout(timer);
+    };
+  }, []);
+
   return (
     <section className="hero-section" id="hero">
-      {/* ENTIRE BACKGROUND VIDEO (EXTENDS BEHIND NAVBAR, NO FILTERS OR OVERLAYS) */}
-      <div className="hero-video-container">
+      {/* BACKGROUND VIDEO (DESKTOP & MOBILE VERSIONS) */}
+      <div className="hero-video-container" aria-hidden="true">
+        {/* Desktop Video */}
         <video
           autoPlay
           loop
           muted
           playsInline
-          className="hero-video-element"
-          aria-hidden="true"
-          style={{
-            objectFit: VIDEO_FIT,
-            transform: `translate(${VIDEO_X}px, ${VIDEO_Y}px) scale(${VIDEO_SCALE})`,
-            transformOrigin: "center center"
-          }}
+          preload="auto"
+          className="hero-video-element hero-video-desktop"
         >
           <source src="/herobg_main.mp4" type="video/mp4" />
           <source src="/herobg.mp4" type="video/mp4" />
         </video>
+
+        {/* Mobile Video */}
+        <video
+          autoPlay
+          loop
+          muted
+          playsInline
+          preload="auto"
+          className="hero-video-element hero-video-mobile"
+        >
+          <source src="/herobg_mobile.mp4" type="video/mp4" />
+          <source src="/herobg.mp4" type="video/mp4" />
+        </video>
+
+        {/* Soft atmospheric gradient overlay */}
+        <div className="hero-video-overlay" />
       </div>
 
-      {/* HERO CONTENT */}
+      {/* LEAD SECTION CONTENT */}
       <div className="container hero-content-wrap">
-        <div className="hero-content">
-          <h1 className="hero-title">Yes, you deserve a break</h1>
-          <p className="hero-subtitle">
-            It&apos;s time for meditative holidays in the Himalayas. Discover an all-inclusive mountain sanctuary combining active meditations, restful silence, cedar forests, and conscious living.
-          </p>
-
-          <div className="hero-ctas">
-            <a href="#contact-us" className="btn btn-lg">Get in touch</a>
-            <a href="#courses" className="btn btn-lg btn-hero-secondary">Explore Courses</a>
+        <div
+          className={`hero-content ${
+            isMobile ? (mobileTextReady ? "mobile-revealed" : "mobile-delayed") : "desktop-revealed"
+          }`}
+        >
+          {/* Brand Name Styled in Poppins: OSHO (Golden) Himalayas (Blue) */}
+          <div className="hero-brand" aria-label="OSHO Himalayas">
+            <span className="hero-brand-osho">OSHO</span>
+            <span className="hero-brand-himalayas">Himalayas</span>
           </div>
 
-          <div className="hero-metrics">
-            <div className="metric-item">
-              <span className="metric-val">4.8 / 5.0</span>
-              <span className="metric-lbl">Based on 1,000+ Google Reviews from meditators worldwide</span>
-            </div>
-            <div className="metric-item">
-              <span className="metric-val">45 Mins</span>
-              <span className="metric-lbl">Scenic cab drive from Kangra / Dharamshala Airport</span>
-            </div>
-            <div className="metric-item">
-              <span className="metric-val">365 Days</span>
-              <span className="metric-lbl">Continuous daily active meditation programs and flexible stays</span>
-            </div>
+          {/* Headline & Taglines */}
+          <h1 className="hero-headline">You deserve a break</h1>
+
+          <p className="hero-subheadline">
+            It&apos;s time for meditative holidays in the Himalayas
+          </p>
+
+          <p className="hero-location-text">Dharamshala, Himachal</p>
+
+          {/* CTA Button */}
+          <div className="hero-actions">
+            <a href="#contact-us" className="btn btn-hero-cta">
+              Get in touch
+            </a>
           </div>
         </div>
       </div>

@@ -3,37 +3,58 @@
 import { useState } from "react";
 import Header from "@/components/Header";
 import Hero from "@/components/Hero";
-import Welcome from "@/components/Welcome";
-import Philosophy from "@/components/Philosophy";
-import CoursesSection from "@/components/CoursesSection";
-import AccommodationSection from "@/components/AccommodationSection";
+import ReelShowcase from "@/components/ReelShowcase";
+import PhotoCarousel from "@/components/PhotoCarousel";
 import ScheduleSection from "@/components/ScheduleSection";
 import ReviewsSection from "@/components/ReviewsSection";
-import TravelSection from "@/components/TravelSection";
-import GallerySection from "@/components/GallerySection";
+import HowToReach from "@/components/HowToReach";
 import FaqSection from "@/components/FaqSection";
-import EnquirySection from "@/components/EnquirySection";
+import VirtualTour from "@/components/VirtualTour";
+import ContactSection from "@/components/ContactSection";
+import FloatingBar from "@/components/FloatingBar";
 import Footer from "@/components/Footer";
 
 export default function Home() {
-  const [selectedCourseForEnquiry, setSelectedCourseForEnquiry] = useState<string>("");
+  const [selectedCourse, setSelectedCourse] = useState<string>("");
 
   return (
     <>
+      {/* MENU: APPEARS AFTER SCROLLING PAST FIRST SECTION */}
       <Header />
+
       <main>
+        {/* SECTION 1: LEAD SECTION (KAYAL STYLE) */}
         <Hero />
-        <Welcome />
-        <Philosophy />
-        <CoursesSection onSelectCourseForEnquiry={(id) => setSelectedCourseForEnquiry(id)} />
-        <AccommodationSection />
-        <ScheduleSection />
+
+        {/* SECTION 2: VIDEO REELS CAROUSEL (KAYAL STYLE) */}
+        <ReelShowcase />
+
+        {/* SECTION 3: PHOTO CAROUSEL (ELEATCEREAL STYLE) */}
+        <PhotoCarousel />
+
+        {/* SECTION 4: FIND OUR SCHEDULE (ELEATCEREAL STYLE) */}
+        <ScheduleSection onSelectCourse={(title) => setSelectedCourse(title)} />
+
+        {/* SECTION 5: VIDEO TESTIMONIALS (DUPLICATING SECTION 2 STYLE) */}
         <ReviewsSection />
-        <TravelSection />
-        <GallerySection />
+
+        {/* SECTION 6: HOW TO REACH HERE */}
+        <HowToReach />
+
+        {/* SECTION 7: FAQS (ELEATCEREAL ACCORDION STYLE) */}
         <FaqSection />
-        <EnquirySection prefilledCourseId={selectedCourseForEnquiry} />
+
+        {/* SECTION 8: VIRTUAL CAMPUS TOUR 360° */}
+        <VirtualTour />
+
+        {/* SECTION 9: GET IN TOUCH (ZOHO EMBED FORM) */}
+        <ContactSection prefilledCourseTitle={selectedCourse} />
       </main>
+
+      {/* FLOATING BOTTOM BAR (ELEATCEREAL STYLE) */}
+      <FloatingBar />
+
+      {/* FOOTER */}
       <Footer />
     </>
   );
