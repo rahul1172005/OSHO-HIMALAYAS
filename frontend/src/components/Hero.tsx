@@ -37,8 +37,7 @@ export default function Hero() {
           preload="auto"
           className="hero-video-element hero-video-desktop"
         >
-          <source src="/herobg_main.mp4" type="video/mp4" />
-          <source src="/herobg.mp4" type="video/mp4" />
+          <source src="/Website-video-2026-desktop-version.mp4" type="video/mp4" />
         </video>
 
         {/* Mobile Video */}
@@ -50,8 +49,7 @@ export default function Hero() {
           preload="auto"
           className="hero-video-element hero-video-mobile"
         >
-          <source src="/herobg_mobile.mp4" type="video/mp4" />
-          <source src="/herobg.mp4" type="video/mp4" />
+          <source src="/New-website-mobile-version-home-page-lead-video_Edited (1).mp4" type="video/mp4" />
         </video>
 
         {/* Soft atmospheric gradient overlay */}
