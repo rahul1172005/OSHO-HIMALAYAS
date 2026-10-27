@@ -145,7 +145,7 @@ export default function GallerySection() {
                 overflow: "hidden",
                 cursor: "pointer",
                 backgroundColor: "var(--card-bg)",
-                boxShadow: "var(--card-shadow)",
+                boxShadow: "none",
                 transition: "transform 0.2s ease"
               }}
             >

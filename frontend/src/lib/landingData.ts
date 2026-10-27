@@ -3,9 +3,10 @@ export interface ReelItem {
   title: string;
   buttonLabel: string;
   thumbnail: string;
-  videoType: "instagram" | "drive" | "youtube";
-  videoUrl: string;
-  embedUrl: string;
+  videoSrc: string;
+  videoType?: "local" | "instagram" | "drive" | "youtube";
+  videoUrl?: string;
+  embedUrl?: string;
 }
 
 export interface ScheduleCourse {
@@ -40,63 +41,56 @@ export const REEL_ITEMS: ReelItem[] = [
     title: "Campus",
     buttonLabel: "Campus",
     thumbnail: "https://oshohimalayascom.swipepages.media/2025/9/65426ca89707d10018b3de0d/20.jpg",
-    videoType: "instagram",
-    videoUrl: "https://www.instagram.com/reel/DDeZzlSTfCQ/",
-    embedUrl: "https://www.instagram.com/reel/DDeZzlSTfCQ/embed/",
+    videoSrc: "/campus.mp4",
   },
   {
     id: "meditations",
     title: "Meditations",
     buttonLabel: "Meditations",
     thumbnail: "https://oshohimalayascom.swipepages.media/2026/8/65426ca89707d10018b3de0d/shiva-sakthi-500.webp",
-    videoType: "drive",
-    videoUrl: "https://drive.google.com/file/d/1oLJ-zPX1VbIHG6yZGTQ9O2GsOm2_lM-5/view?usp=sharing",
-    embedUrl: "https://drive.google.com/file/d/1oLJ-zPX1VbIHG6yZGTQ9O2GsOm2_lM-5/preview",
+    videoSrc: "/meditations.MOV",
   },
   {
     id: "weather",
     title: "Weather",
     buttonLabel: "Weather",
     thumbnail: "https://oshohimalayascom.swipepages.media/2026/8/65426ca89707d10018b3de0d/untitled-design--7--1500.webp",
-    videoType: "drive",
-    videoUrl: "https://drive.google.com/file/d/13NTMqWTjSZ888CYp8hUdKwCkbcqileAW/view?usp=sharing",
-    embedUrl: "https://drive.google.com/file/d/13NTMqWTjSZ888CYp8hUdKwCkbcqileAW/preview",
-  },
-  {
-    id: "people",
-    title: "People",
-    buttonLabel: "People",
-    thumbnail: "https://oshohimalayascom.swipepages.media/2026/8/65426ca89707d10018b3de0d/1-1.webp",
-    videoType: "instagram",
-    videoUrl: "https://www.instagram.com/p/DewaPd-oUKd/",
-    embedUrl: "https://www.instagram.com/p/DewaPd-oUKd/embed/",
+    videoSrc: "/weather.mp4",
   },
   {
     id: "living-in",
     title: "Living In",
     buttonLabel: "Living In",
     thumbnail: "https://oshohimalayascom.swipepages.media/2025/9/65426ca89707d10018b3de0d/1.jpg",
-    videoType: "instagram",
-    videoUrl: "https://www.instagram.com/p/C_YLK7eo41-/",
-    embedUrl: "https://www.instagram.com/p/C_YLK7eo41-/embed/",
+    videoSrc: "/living-in.mp4",
   },
   {
     id: "nature",
     title: "Nature",
     buttonLabel: "Nature",
     thumbnail: "https://oshohimalayascom.swipepages.media/2026/8/65426ca89707d10018b3de0d/whatsapp-image-2026-08-01-at-08-24-07-1500.webp",
-    videoType: "instagram",
-    videoUrl: "https://www.instagram.com/p/Dejl1NpiDz5/",
-    embedUrl: "https://www.instagram.com/p/Dejl1NpiDz5/embed/",
+    videoSrc: "/nature.mp4",
+  },
+  {
+    id: "retreat-life",
+    title: "Retreat Life",
+    buttonLabel: "Retreat Life",
+    thumbnail: "https://oshohimalayascom.swipepages.media/2026/8/65426ca89707d10018b3de0d/1-1.webp",
+    videoSrc: "/lead-video.mp4",
   },
   {
     id: "bonfire",
     title: "Bonfire",
     buttonLabel: "Bonfire",
     thumbnail: "https://oshohimalayascom.swipepages.media/2026/8/65426ca89707d10018b3de0d/for-website-home-page.webp",
-    videoType: "instagram",
-    videoUrl: "https://www.instagram.com/p/De1j_PKI6vn/",
-    embedUrl: "https://www.instagram.com/p/De1j_PKI6vn/embed/",
+    videoSrc: "/bonfire.mp4",
+  },
+  {
+    id: "people",
+    title: "People",
+    buttonLabel: "People",
+    thumbnail: "https://oshohimalayascom.swipepages.media/2026/8/65426ca89707d10018b3de0d/4-2.webp",
+    videoSrc: "/people.mp4",
   },
 ];
 
