@@ -23,8 +23,9 @@ export interface TestimonialReview {
   name: string;
   location: string;
   quote: string;
-  youtubeId: string;
+  youtubeId?: string;
   thumbnail: string;
+  videoSrc: string;
 }
 
 export interface FaqItem {
@@ -239,14 +240,7 @@ export const TESTIMONIAL_REVIEWS: TestimonialReview[] = [
     quote: "This is the place to discover freedom and peace.",
     youtubeId: "fn-gh8eBn2g",
     thumbnail: "https://oshohimalayascom.swipepages.media/2026/8/65426ca89707d10018b3de0d/5-500.webp",
-  },
-  {
-    id: "max",
-    name: "Max",
-    location: "Germany",
-    quote: "I can't wait to come back soon.",
-    youtubeId: "prJrDLDS25M",
-    thumbnail: "https://oshohimalayascom.swipepages.media/2026/8/65426ca89707d10018b3de0d/6-500.webp",
+    videoSrc: "/amura from Germany.mp4",
   },
   {
     id: "ernst",
@@ -255,6 +249,7 @@ export const TESTIMONIAL_REVIEWS: TestimonialReview[] = [
     quote: "A lot of nice people to be around here.",
     youtubeId: "4qOl7yRLVFc",
     thumbnail: "https://oshohimalayascom.swipepages.media/2026/8/65426ca89707d10018b3de0d/4-500.webp",
+    videoSrc: "/Ernst from Netherlands.mp4",
   },
   {
     id: "greta",
@@ -263,6 +258,7 @@ export const TESTIMONIAL_REVIEWS: TestimonialReview[] = [
     quote: "I recommend anyone to come here at least once in life.",
     youtubeId: "h8VuSZWMIUw",
     thumbnail: "https://oshohimalayascom.swipepages.media/2026/8/65426ca89707d10018b3de0d/3-500.webp",
+    videoSrc: "/Greta from poland.mp4",
   },
   {
     id: "kathleen-peter",
@@ -271,6 +267,16 @@ export const TESTIMONIAL_REVIEWS: TestimonialReview[] = [
     quote: "We are already booking to come back in summer.",
     youtubeId: "HmBChf8s6m4",
     thumbnail: "https://oshohimalayascom.swipepages.media/2026/8/65426ca89707d10018b3de0d/2-500.webp",
+    videoSrc: "/kathleen & peter from ireland.mp4",
+  },
+  {
+    id: "max",
+    name: "Max",
+    location: "Germany",
+    quote: "I can't wait to come back soon.",
+    youtubeId: "prJrDLDS25M",
+    thumbnail: "https://oshohimalayascom.swipepages.media/2026/8/65426ca89707d10018b3de0d/6-500.webp",
+    videoSrc: "/max from germany.mp4",
   },
   {
     id: "shilpa",
@@ -279,6 +285,7 @@ export const TESTIMONIAL_REVIEWS: TestimonialReview[] = [
     quote: "This place itself has such a high energy.",
     youtubeId: "ycaGlod1fLI",
     thumbnail: "https://oshohimalayascom.swipepages.media/2026/8/65426ca89707d10018b3de0d/1-500.webp",
+    videoSrc: "/Shilpa from india.mp4",
   },
 ];
 

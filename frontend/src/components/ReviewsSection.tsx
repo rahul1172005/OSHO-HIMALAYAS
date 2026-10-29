@@ -1,11 +1,13 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
-import { TESTIMONIAL_REVIEWS, TestimonialReview } from "@/lib/landingData";
+import { useState, useRef } from "react";
+import { TESTIMONIAL_REVIEWS } from "@/lib/landingData";
 
 export default function ReviewsSection() {
-  const [activeReview, setActiveReview] = useState<TestimonialReview | null>(null);
+  const [playingId, setPlayingId] = useState<string | null>(null);
+  const [isMuted, setIsMuted] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
+  const videoRefs = useRef<{ [key: string]: HTMLVideoElement | null }>({});
 
   const scrollLeft = () => {
     if (scrollRef.current) {
@@ -19,33 +21,53 @@ export default function ReviewsSection() {
     }
   };
 
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Escape") {
-        setActiveReview(null);
-      }
-    };
-    if (activeReview) {
-      document.body.style.overflow = "hidden";
-      window.addEventListener("keydown", handleKeyDown);
-    } else {
-      document.body.style.overflow = "";
+  const togglePlay = (id: string, e?: React.MouseEvent) => {
+    if (e) {
+      e.stopPropagation();
     }
-    return () => {
-      document.body.style.overflow = "";
-      window.removeEventListener("keydown", handleKeyDown);
-    };
-  }, [activeReview]);
+
+    if (playingId === id) {
+      const currentVideo = videoRefs.current[id];
+      if (currentVideo) {
+        currentVideo.pause();
+      }
+      setPlayingId(null);
+    } else {
+      // Pause previously playing video
+      if (playingId && videoRefs.current[playingId]) {
+        videoRefs.current[playingId]?.pause();
+      }
+
+      // Play selected video
+      const targetVideo = videoRefs.current[id];
+      if (targetVideo) {
+        targetVideo.currentTime = 0;
+        targetVideo.play().catch((err) => {
+          console.warn("Video playback was interrupted or restricted:", err);
+        });
+      }
+      setPlayingId(id);
+    }
+  };
+
+  const toggleMute = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setIsMuted((prev) => !prev);
+  };
 
   return (
     <section className="section-reel-showcase section-reviews-showcase" id="reviews">
       <div className="container">
-        {/* HEADER TEXT FROM LP */}
+        {/* HEADER TEXT */}
         <div className="reel-header text-center">
           <span className="reviews-kicker">Our reviews</span>
           <h2 className="reel-title">Why Meditators Love Us</h2>
           <div className="reviews-rating-badge">
-            <span className="stars" aria-hidden="true" style={{ display: "inline-flex", gap: "2px", color: "var(--color-gold)" }}>
+            <span
+              className="stars"
+              aria-hidden="true"
+              style={{ display: "inline-flex", gap: "2px", color: "var(--color-gold)" }}
+            >
               {[0, 1, 2, 3, 4].map((i) => (
                 <svg key={i} width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
                   <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
@@ -56,47 +78,110 @@ export default function ReviewsSection() {
           </div>
         </div>
 
-        {/* 4-COLUMN CAROUSEL DUPLICATING SECTION 2 */}
+        {/* 4-COLUMN CAROUSEL OF PORTRAIT REEL CARDS */}
         <div className="reel-carousel-wrapper">
           <div className="reel-cards-track" ref={scrollRef}>
-            {TESTIMONIAL_REVIEWS.map((rev) => (
-              <div
-                key={rev.id}
-                className="reel-card testimonial-card"
-                onClick={() => setActiveReview(rev)}
-                role="button"
-                tabIndex={0}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter" || e.key === " ") {
-                    e.preventDefault();
-                    setActiveReview(rev);
-                  }
-                }}
-                aria-label={`Watch testimonial by ${rev.name} from ${rev.location}`}
-              >
-                <div
-                  className="reel-card-media"
-                  style={{ backgroundImage: `url(${rev.thumbnail})` }}
-                >
-                  <div className="reel-card-overlay" />
-                  <div className="reel-card-pill">
-                    <span className="reel-play-icon" aria-hidden="true">
-                      <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor">
-                        <polygon points="5 3 19 12 5 21 5 3" />
-                      </svg>
-                    </span>
-                    <span className="reel-pill-label">{rev.name}</span>
-                  </div>
+            {TESTIMONIAL_REVIEWS.map((rev) => {
+              const isPlaying = playingId === rev.id;
 
-                  <div className="testimonial-card-meta">
-                    <h3 className="testimonial-author-name">
-                      {rev.name} from {rev.location}
-                    </h3>
-                    <p className="testimonial-author-quote">&ldquo;{rev.quote}&rdquo;</p>
+              return (
+                <div
+                  key={rev.id}
+                  className={`reel-card testimonial-reel-card ${isPlaying ? "is-playing" : ""}`}
+                  onClick={(e) => togglePlay(rev.id, e)}
+                  role="button"
+                  tabIndex={0}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" || e.key === " ") {
+                      e.preventDefault();
+                      togglePlay(rev.id);
+                    }
+                  }}
+                  aria-label={`${isPlaying ? "Pause" : "Play"} ${rev.name} video review`}
+                >
+                  <div
+                    className="reel-card-media"
+                    style={{ backgroundImage: `url(${rev.thumbnail})` }}
+                  >
+                    {/* HTML5 Native Video Player */}
+                    <video
+                      ref={(el) => {
+                        videoRefs.current[rev.id] = el;
+                      }}
+                      src={rev.videoSrc}
+                      className="reel-card-video"
+                      playsInline
+                      preload="metadata"
+                      muted={isMuted}
+                      loop
+                      onEnded={() => setPlayingId(null)}
+                    />
+
+                    {/* Gradient Overlay */}
+                    <div className={`reel-card-overlay ${isPlaying ? "playing" : ""}`} />
+
+                    {/* Sound Control for active card */}
+                    {isPlaying && (
+                      <div className="reel-card-top-controls" onClick={(e) => e.stopPropagation()}>
+                        <button
+                          type="button"
+                          className="reel-sound-btn"
+                          onClick={toggleMute}
+                          aria-label={isMuted ? "Unmute audio" : "Mute audio"}
+                          title={isMuted ? "Unmute" : "Mute"}
+                        >
+                          {isMuted ? (
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                              <path d="M11 5L6 9H2v6h4l5 4V5z" />
+                              <line x1="23" y1="9" x2="17" y2="15" />
+                              <line x1="17" y1="9" x2="23" y2="15" />
+                            </svg>
+                          ) : (
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                              <path d="M11 5L6 9H2v6h4l5 4V5z" />
+                              <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07" />
+                            </svg>
+                          )}
+                        </button>
+                      </div>
+                    )}
+
+                    {/* Testimonial Quote & Info Overlay */}
+                    <div className={`testimonial-card-meta ${isPlaying ? "playing" : ""}`}>
+                      <h3 className="testimonial-author-name">
+                        {rev.name}
+                        <span className="testimonial-author-country"> · {rev.location}</span>
+                      </h3>
+                      <p className="testimonial-author-quote">&ldquo;{rev.quote}&rdquo;</p>
+                    </div>
+
+                    {/* Play / Pause Pill Button */}
+                    <button
+                      type="button"
+                      className={`reel-card-pill ${isPlaying ? "playing" : ""}`}
+                      onClick={(e) => togglePlay(rev.id, e)}
+                      aria-label={`${isPlaying ? "Pause" : "Play"} review by ${rev.name}`}
+                    >
+                      <span className="reel-play-icon" aria-hidden="true">
+                        {isPlaying ? (
+                          <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor">
+                            <rect x="6" y="4" width="4" height="16" />
+                            <rect x="14" y="4" width="4" height="16" />
+                          </svg>
+                        ) : (
+                          <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor">
+                            <polygon points="5 3 19 12 5 21 5 3" />
+                          </svg>
+                        )}
+                      </span>
+                      <span className="reel-pill-label">
+                        {isPlaying ? `Pause: ${rev.name}` : rev.name}
+                      </span>
+                    </button>
                   </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
 
           {/* ARROW NAVIGATION */}
@@ -122,47 +207,6 @@ export default function ReviewsSection() {
           </div>
         </div>
       </div>
-
-      {/* POPUP MODAL IN 9:16 YOUTUBE VERTICAL FORMAT */}
-      {activeReview && (
-        <div
-          className="reel-modal-backdrop"
-          onClick={() => setActiveReview(null)}
-          role="dialog"
-          aria-modal="true"
-          aria-label={`${activeReview.name} video review`}
-        >
-          <div className="reel-modal-container" onClick={(e) => e.stopPropagation()}>
-            <button
-              className="reel-modal-close-btn"
-              onClick={() => setActiveReview(null)}
-              aria-label="Close review video"
-            >
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                <line x1="18" y1="6" x2="6" y2="18" />
-                <line x1="6" y1="6" x2="18" y2="18" />
-              </svg>
-            </button>
-
-            <div className="reel-modal-frame">
-              <iframe
-                src={`https://www.youtube-nocookie.com/embed/${activeReview.youtubeId}?autoplay=1&rel=0&modestbranding=1`}
-                className="reel-iframe"
-                allow="autoplay; encrypted-media; picture-in-picture"
-                allowFullScreen
-                title={`${activeReview.name} review`}
-              />
-
-              <div className="reel-modal-footer">
-                <span className="reel-modal-title">
-                  {activeReview.name} from {activeReview.location}
-                </span>
-                <p className="reel-modal-quote">&ldquo;{activeReview.quote}&rdquo;</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
     </section>
   );
 }
