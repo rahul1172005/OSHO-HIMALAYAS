@@ -1714,6 +1714,21 @@ video {
     grid-template-columns: 1fr;
     gap: 32px;
   }
+
+  /* Photo carousel header: stack vertically on tablet and mobile so navigation buttons are never cut off */
+  .photo-carousel-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+    margin-bottom: 22px;
+  }
+
+  .photo-nav-arrows {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-top: 4px;
+  }
 }
 
 @media (max-width: 768px) {
@@ -1819,6 +1834,15 @@ video {
   .section-virtual-tour,
   .section-contact {
     padding: 38px 0 32px;
+  }
+
+  /* Photo carousel on mobile */
+  .photo-carousel-title {
+    font-size: 1.85rem;
+  }
+
+  .photo-carousel-sub {
+    font-size: 0.95rem;
   }
 
   /* Schedule section */
