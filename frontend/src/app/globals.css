@@ -420,6 +420,11 @@ video {
 
 .hero-content {
   max-width: 960px;
+  transform: translate(
+    var(--hero-text-x-desktop, var(--hero-text-x, 0px)),
+    var(--hero-text-y-desktop, var(--hero-text-y, 0px))
+  );
+  transition: transform var(--transition-fast);
 }
 
 .hero-headline {
@@ -1865,6 +1870,13 @@ video {
   /* Hero on mobile: positioned in open sky area in 2 clean lines */
   .hero-content-wrap {
     padding-top: clamp(160px, 24vh, 215px);
+  }
+
+  .hero-content {
+    transform: translate(
+      var(--hero-text-x-mobile, var(--hero-text-x, 0px)),
+      var(--hero-text-y-mobile, var(--hero-text-y, 0px))
+    );
   }
 
   .hero-headline {
