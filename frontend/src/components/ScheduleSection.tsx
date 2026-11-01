@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useRef } from "react";
 import { SCHEDULE_COURSES, ScheduleCourse } from "@/lib/landingData";
 
 interface ScheduleSectionProps {
@@ -8,16 +8,18 @@ interface ScheduleSectionProps {
 }
 
 export default function ScheduleSection({ onSelectCourse }: ScheduleSectionProps) {
-  const [direction, setDirection] = useState<"normal" | "reverse">("normal");
-  const [isPaused, setIsPaused] = useState(false);
+  const trackRef = useRef<HTMLDivElement>(null);
 
-  const togglePause = () => {
-    setIsPaused((prev) => !prev);
+  const scrollLeft = () => {
+    if (trackRef.current) {
+      trackRef.current.scrollBy({ left: -340, behavior: "smooth" });
+    }
   };
 
-  const handleDirection = (dir: "normal" | "reverse") => {
-    setDirection(dir);
-    setIsPaused(false);
+  const scrollRight = () => {
+    if (trackRef.current) {
+      trackRef.current.scrollBy({ left: 340, behavior: "smooth" });
+    }
   };
 
   const handleEnquire = (course: ScheduleCourse) => {
@@ -30,8 +32,8 @@ export default function ScheduleSection({ onSelectCourse }: ScheduleSectionProps
     }
   };
 
-  const renderCourseCard = (course: ScheduleCourse, key: string) => (
-    <div key={key} className="eleat-course-card">
+  const renderCourseCard = (course: ScheduleCourse) => (
+    <div key={course.id} className="eleat-course-card">
       <div className="eleat-card-media-wrap">
         <img
           src={course.image}
@@ -73,14 +75,14 @@ export default function ScheduleSection({ onSelectCourse }: ScheduleSectionProps
             food, swimming pool, gym, &amp; library).
           </p>
 
-          {/* ARROW & PAUSE CONTROLS */}
+          {/* ARROW CONTROLS (MOVES MANUALLY ONLY) */}
           <div className="schedule-arrows">
             <button
               type="button"
-              onClick={() => handleDirection("reverse")}
-              className={`schedule-arrow-btn ${direction === "reverse" && !isPaused ? "active-arrow" : ""}`}
+              onClick={scrollLeft}
+              className="schedule-arrow-btn"
               aria-label="Scroll courses left"
-              title="Move left"
+              title="Previous courses"
             >
               <svg
                 width="18"
@@ -99,40 +101,10 @@ export default function ScheduleSection({ onSelectCourse }: ScheduleSectionProps
             </button>
             <button
               type="button"
-              onClick={togglePause}
-              className={`schedule-arrow-btn ${isPaused ? "paused-btn" : ""}`}
-              aria-label={isPaused ? "Resume auto-scroll" : "Pause auto-scroll"}
-              title={isPaused ? "Resume auto-scroll" : "Pause auto-scroll"}
-            >
-              {isPaused ? (
-                <svg
-                  width="16"
-                  height="16"
-                  viewBox="0 0 24 24"
-                  fill="currentColor"
-                  aria-hidden="true"
-                >
-                  <polygon points="5 3 19 12 5 21 5 3" />
-                </svg>
-              ) : (
-                <svg
-                  width="16"
-                  height="16"
-                  viewBox="0 0 24 24"
-                  fill="currentColor"
-                  aria-hidden="true"
-                >
-                  <rect x="6" y="4" width="4" height="16" rx="1" />
-                  <rect x="14" y="4" width="4" height="16" rx="1" />
-                </svg>
-              )}
-            </button>
-            <button
-              type="button"
-              onClick={() => handleDirection("normal")}
-              className={`schedule-arrow-btn ${direction === "normal" && !isPaused ? "active-arrow" : ""}`}
+              onClick={scrollRight}
+              className="schedule-arrow-btn"
               aria-label="Scroll courses right"
-              title="Move right"
+              title="Next courses"
             >
               <svg
                 width="18"
@@ -152,23 +124,10 @@ export default function ScheduleSection({ onSelectCourse }: ScheduleSectionProps
           </div>
         </div>
 
-        {/* RIGHT COLUMN: INFINITE MARQUEE LIST COURSE CARDS TRACK */}
+        {/* RIGHT COLUMN: CONSTANT HORIZONTAL COURSE CARDS TRACK (MOVES ONLY WHEN MANUALLY SCROLLED) */}
         <div className="schedule-cards-wrap">
-          <div
-            className={`schedule-marquee-row ${isPaused ? "is-paused" : ""} ${
-              direction === "reverse" ? "is-reverse" : "is-normal"
-            }`}
-          >
-            <div className="schedule-marquee-group">
-              {SCHEDULE_COURSES.map((course) =>
-                renderCourseCard(course, `c1-${course.id}`)
-              )}
-            </div>
-            <div className="schedule-marquee-group" aria-hidden="true">
-              {SCHEDULE_COURSES.map((course) =>
-                renderCourseCard(course, `c2-${course.id}`)
-              )}
-            </div>
+          <div className="schedule-cards-track" ref={trackRef}>
+            {SCHEDULE_COURSES.map((course) => renderCourseCard(course))}
           </div>
         </div>
       </div>

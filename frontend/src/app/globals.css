@@ -478,55 +478,23 @@ video {
   font-weight: 300;
 }
 
-.reel-marquee-wrapper {
+.reel-carousel-wrapper {
   position: relative;
   width: 100%;
-  overflow: hidden;
   padding: 6px 0 16px;
 }
 
-.reel-marquee-row {
-  display: flex;
-  width: max-content;
-  will-change: transform;
-}
-
-.reel-marquee-row.is-normal {
-  animation: reelMarqueeLeft 50s linear infinite;
-}
-
-.reel-marquee-row.is-reverse {
-  animation: reelMarqueeRight 50s linear infinite;
-}
-
-.reel-marquee-row.is-paused,
-.reel-marquee-wrapper:hover .reel-marquee-row {
-  animation-play-state: paused !important;
-}
-
-.reel-marquee-group {
+.reel-cards-track {
   display: flex;
   gap: 18px;
-  padding-right: 18px;
-  flex-shrink: 0;
+  overflow-x: auto;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+  padding-bottom: 8px;
 }
 
-@keyframes reelMarqueeLeft {
-  0% {
-    transform: translate3d(0, 0, 0);
-  }
-  100% {
-    transform: translate3d(-50%, 0, 0);
-  }
-}
-
-@keyframes reelMarqueeRight {
-  0% {
-    transform: translate3d(-50%, 0, 0);
-  }
-  100% {
-    transform: translate3d(0, 0, 0);
-  }
+.reel-cards-track::-webkit-scrollbar {
+  display: none;
 }
 
 .reel-card {
@@ -904,9 +872,14 @@ video {
   animation: photoMarqueeLeft 70s linear infinite;
 }
 
-.photo-marquee-row.is-paused,
-.photo-marquee-wrapper:hover .photo-marquee-row {
+.photo-marquee-row.is-paused {
   animation-play-state: paused !important;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .photo-marquee-wrapper:hover .photo-marquee-row {
+    animation-play-state: paused;
+  }
 }
 
 .photo-marquee-group {
@@ -1172,48 +1145,18 @@ video {
   padding: 6px 0 16px;
 }
 
-.schedule-marquee-row {
-  display: flex;
-  width: max-content;
-  will-change: transform;
-}
-
-.schedule-marquee-row.is-normal {
-  animation: scheduleMarqueeLeft 55s linear infinite;
-}
-
-.schedule-marquee-row.is-reverse {
-  animation: scheduleMarqueeRight 55s linear infinite;
-}
-
-.schedule-marquee-row.is-paused,
-.schedule-cards-wrap:hover .schedule-marquee-row {
-  animation-play-state: paused !important;
-}
-
-.schedule-marquee-group {
+.schedule-cards-track {
   display: flex;
   gap: 20px;
-  padding-right: 20px;
-  flex-shrink: 0;
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  padding-bottom: 16px;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
 }
 
-@keyframes scheduleMarqueeLeft {
-  0% {
-    transform: translate3d(0, 0, 0);
-  }
-  100% {
-    transform: translate3d(-50%, 0, 0);
-  }
-}
-
-@keyframes scheduleMarqueeRight {
-  0% {
-    transform: translate3d(-50%, 0, 0);
-  }
-  100% {
-    transform: translate3d(0, 0, 0);
-  }
+.schedule-cards-track::-webkit-scrollbar {
+  display: none;
 }
 
 .eleat-course-card {

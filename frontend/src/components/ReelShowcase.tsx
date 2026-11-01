@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { REEL_ITEMS, ReelItem } from "@/lib/landingData";
 
 export default function ReelShowcase() {
@@ -11,19 +11,36 @@ export default function ReelShowcase() {
   const [isPaused, setIsPaused] = useState(false);
   const [activeModalReel, setActiveModalReel] = useState<ReelItem | null>(null);
 
-  // Store video elements by compound key: `${keyPrefix}-${item.id}`
+  const trackRef = useRef<HTMLDivElement>(null);
   const videoElements = useRef<{ [key: string]: HTMLVideoElement | null }>({});
+  const isInteracting = useRef(false);
+  const resumeTimer = useRef<NodeJS.Timeout | null>(null);
+
+  const pauseAllVideos = () => {
+    Object.values(videoElements.current).forEach((el) => {
+      if (el) el.pause();
+    });
+    setPlayingId(null);
+    setActiveKey(null);
+  };
+
+  const scrollLeft = () => {
+    pauseAllVideos();
+    if (trackRef.current) {
+      trackRef.current.scrollBy({ left: -340, behavior: "smooth" });
+    }
+  };
+
+  const scrollRight = () => {
+    pauseAllVideos();
+    if (trackRef.current) {
+      trackRef.current.scrollBy({ left: 340, behavior: "smooth" });
+    }
+  };
 
   const togglePause = () => {
-    // If a video is playing, pause all videos and set marquee to paused
     if (playingId) {
-      Object.entries(videoElements.current).forEach(([k, el]) => {
-        if (el) {
-          el.pause();
-        }
-      });
-      setPlayingId(null);
-      setActiveKey(null);
+      pauseAllVideos();
       setIsPaused(true);
       return;
     }
@@ -31,55 +48,85 @@ export default function ReelShowcase() {
   };
 
   const handleDirection = (dir: "normal" | "reverse") => {
-    // If any video is currently playing, pause it so cards can move freely
-    if (playingId) {
-      Object.entries(videoElements.current).forEach(([k, el]) => {
-        if (el) {
-          el.pause();
-        }
-      });
-      setPlayingId(null);
-      setActiveKey(null);
-    }
+    pauseAllVideos();
     setDirection(dir);
     setIsPaused(false);
   };
+
+  const handleTouchStart = () => {
+    isInteracting.current = true;
+    if (resumeTimer.current) clearTimeout(resumeTimer.current);
+  };
+
+  const handleTouchEnd = () => {
+    if (resumeTimer.current) clearTimeout(resumeTimer.current);
+    resumeTimer.current = setTimeout(() => {
+      isInteracting.current = false;
+    }, 2000);
+  };
+
+  const handleWheel = () => {
+    isInteracting.current = true;
+    if (resumeTimer.current) clearTimeout(resumeTimer.current);
+    resumeTimer.current = setTimeout(() => {
+      isInteracting.current = false;
+    }, 2000);
+  };
+
+  // Continuous auto-scroll loop with seamless loop wrap-around
+  useEffect(() => {
+    let animId: number;
+    let lastTime = performance.now();
+
+    const loop = (currentTime: number) => {
+      const dt = currentTime - lastTime;
+      lastTime = currentTime;
+
+      const track = trackRef.current;
+      if (track && !isPaused && !playingId && !isInteracting.current) {
+        // ~30px per second drift
+        const pxPerSec = direction === "normal" ? 30 : -30;
+        const move = (pxPerSec * dt) / 1000;
+        track.scrollLeft += move;
+
+        const half = track.scrollWidth / 2;
+        if (half > 0) {
+          if (track.scrollLeft >= half) {
+            track.scrollLeft -= half;
+          } else if (track.scrollLeft <= 0 && direction === "reverse") {
+            track.scrollLeft += half;
+          }
+        }
+      }
+
+      animId = requestAnimationFrame(loop);
+    };
+
+    animId = requestAnimationFrame(loop);
+    return () => {
+      cancelAnimationFrame(animId);
+      if (resumeTimer.current) clearTimeout(resumeTimer.current);
+    };
+  }, [isPaused, playingId, direction]);
 
   const handleCardClick = (item: ReelItem, keyPrefix: string, e?: React.MouseEvent) => {
     if (e) {
       e.stopPropagation();
     }
 
-    // If item is Instagram reel, open modal popup in reel dimensions
     if (item.videoType === "instagram") {
-      // Pause all local videos
-      Object.values(videoElements.current).forEach((v) => v?.pause());
-      setPlayingId(null);
-      setActiveKey(null);
+      pauseAllVideos();
       setActiveModalReel(item);
       return;
     }
 
     const clickedKey = `${keyPrefix}-${item.id}`;
 
-    // If this item is already playing, clicking toggles pause
     if (playingId === item.id) {
-      Object.entries(videoElements.current).forEach(([k, el]) => {
-        if (k.endsWith(`-${item.id}`) && el) {
-          el.pause();
-        }
-      });
-      setPlayingId(null);
-      setActiveKey(null);
+      pauseAllVideos();
     } else {
-      // Pause any previously playing video across the showcase
-      Object.values(videoElements.current).forEach((el) => {
-        if (el) {
-          el.pause();
-        }
-      });
+      pauseAllVideos();
 
-      // Get the primary video element for the card that was clicked
       const primaryVideo =
         videoElements.current[clickedKey] ||
         (e?.currentTarget?.querySelector("video") as HTMLVideoElement | null);
@@ -101,7 +148,7 @@ export default function ReelShowcase() {
         }
       }
 
-      // Sync any duplicate clone in the other marquee track (muted to prevent echo)
+      // Sync any duplicate clone in the other track (muted)
       Object.entries(videoElements.current).forEach(([k, el]) => {
         if (k.endsWith(`-${item.id}`) && el && el !== primaryVideo) {
           el.currentTime = 0;
@@ -123,7 +170,6 @@ export default function ReelShowcase() {
     if (activeKey && videoElements.current[activeKey]) {
       videoElements.current[activeKey]!.muted = nextMuted;
     } else if (playingId) {
-      // Fallback: apply to the first active instance
       Object.entries(videoElements.current).forEach(([k, el]) => {
         if (k.endsWith(`-${playingId}`) && el) {
           el.muted = nextMuted;
@@ -179,7 +225,7 @@ export default function ReelShowcase() {
             />
           )}
 
-          {/* Sound Control for active card */}
+          {/* Sound Control for active card on top-left */}
           {isPlaying && (
             <div className="reel-card-top-controls" onClick={(e) => e.stopPropagation()}>
               <button
@@ -264,27 +310,34 @@ export default function ReelShowcase() {
           </p>
         </div>
 
-        {/* REELS INFINITE MARQUEE TRACK */}
-        <div className="reel-marquee-wrapper">
+        {/* FULLY SCROLLABLE & SWIPEABLE REELS TRACK WITH SEAMLESS AUTO-SCROLL LOOP */}
+        <div className="reel-carousel-wrapper">
           <div
-            className={`reel-marquee-row ${isPaused || playingId !== null ? "is-paused" : ""} ${
-              direction === "reverse" ? "is-reverse" : "is-normal"
-            }`}
+            className="reel-cards-track"
+            ref={trackRef}
+            onTouchStart={handleTouchStart}
+            onTouchEnd={handleTouchEnd}
+            onTouchCancel={handleTouchEnd}
+            onWheel={handleWheel}
+            onMouseEnter={() => {
+              isInteracting.current = true;
+            }}
+            onMouseLeave={() => {
+              isInteracting.current = false;
+            }}
           >
-            <div className="reel-marquee-group">
-              {REEL_ITEMS.map((item) => renderCard(item, "r1"))}
-            </div>
-            <div className="reel-marquee-group" aria-hidden="true">
-              {REEL_ITEMS.map((item) => renderCard(item, "r2"))}
-            </div>
+            {/* Primary Track */}
+            {REEL_ITEMS.map((item) => renderCard(item, "r1"))}
+            {/* Seamless Clone Track for Continuous Infinity Loop */}
+            {REEL_ITEMS.map((item) => renderCard(item, "r2"))}
           </div>
 
-          {/* DIRECTION & PAUSE CONTROLS */}
+          {/* DIRECTION, MANUAL SCROLL & PAUSE CONTROLS */}
           <div className="reel-nav-controls">
             <button
               type="button"
-              className={`reel-nav-btn ${direction === "reverse" && !isPaused ? "active-arrow" : ""}`}
-              onClick={() => handleDirection("reverse")}
+              className="reel-nav-btn"
+              onClick={scrollLeft}
               aria-label="Scroll videos left"
               title="Move left"
             >
@@ -323,8 +376,8 @@ export default function ReelShowcase() {
             </button>
             <button
               type="button"
-              className={`reel-nav-btn ${direction === "normal" && !isPaused ? "active-arrow" : ""}`}
-              onClick={() => handleDirection("normal")}
+              className="reel-nav-btn"
+              onClick={scrollRight}
               aria-label="Scroll videos right"
               title="Move right"
             >

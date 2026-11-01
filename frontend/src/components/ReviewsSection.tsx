@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { TESTIMONIAL_REVIEWS, TestimonialReview } from "@/lib/landingData";
 
 export default function ReviewsSection() {
@@ -9,36 +9,97 @@ export default function ReviewsSection() {
   const [isMuted, setIsMuted] = useState(false);
   const [direction, setDirection] = useState<"normal" | "reverse">("normal");
   const [isPaused, setIsPaused] = useState(false);
+
+  const trackRef = useRef<HTMLDivElement>(null);
   const videoElements = useRef<{ [key: string]: HTMLVideoElement | null }>({});
+  const isInteracting = useRef(false);
+  const resumeTimer = useRef<NodeJS.Timeout | null>(null);
+
+  const pauseAllVideos = () => {
+    Object.values(videoElements.current).forEach((el) => {
+      if (el) el.pause();
+    });
+    setPlayingId(null);
+    setActiveKey(null);
+  };
+
+  const scrollLeft = () => {
+    pauseAllVideos();
+    if (trackRef.current) {
+      trackRef.current.scrollBy({ left: -340, behavior: "smooth" });
+    }
+  };
+
+  const scrollRight = () => {
+    pauseAllVideos();
+    if (trackRef.current) {
+      trackRef.current.scrollBy({ left: 340, behavior: "smooth" });
+    }
+  };
 
   const togglePause = () => {
     if (playingId) {
-      Object.entries(videoElements.current).forEach(([k, el]) => {
-        if (el) {
-          el.pause();
-        }
-      });
-      setPlayingId(null);
-      setActiveKey(null);
+      pauseAllVideos();
       setIsPaused(true);
       return;
     }
     setIsPaused((prev) => !prev);
   };
 
-  const handleDirection = (dir: "normal" | "reverse") => {
-    if (playingId) {
-      Object.entries(videoElements.current).forEach(([k, el]) => {
-        if (el) {
-          el.pause();
-        }
-      });
-      setPlayingId(null);
-      setActiveKey(null);
-    }
-    setDirection(dir);
-    setIsPaused(false);
+  const handleTouchStart = () => {
+    isInteracting.current = true;
+    if (resumeTimer.current) clearTimeout(resumeTimer.current);
   };
+
+  const handleTouchEnd = () => {
+    if (resumeTimer.current) clearTimeout(resumeTimer.current);
+    resumeTimer.current = setTimeout(() => {
+      isInteracting.current = false;
+    }, 2000);
+  };
+
+  const handleWheel = () => {
+    isInteracting.current = true;
+    if (resumeTimer.current) clearTimeout(resumeTimer.current);
+    resumeTimer.current = setTimeout(() => {
+      isInteracting.current = false;
+    }, 2000);
+  };
+
+  // Continuous auto-scroll loop with seamless wrap-around
+  useEffect(() => {
+    let animId: number;
+    let lastTime = performance.now();
+
+    const loop = (currentTime: number) => {
+      const dt = currentTime - lastTime;
+      lastTime = currentTime;
+
+      const track = trackRef.current;
+      if (track && !isPaused && !playingId && !isInteracting.current) {
+        const pxPerSec = direction === "normal" ? 30 : -30;
+        const move = (pxPerSec * dt) / 1000;
+        track.scrollLeft += move;
+
+        const half = track.scrollWidth / 2;
+        if (half > 0) {
+          if (track.scrollLeft >= half) {
+            track.scrollLeft -= half;
+          } else if (track.scrollLeft <= 0 && direction === "reverse") {
+            track.scrollLeft += half;
+          }
+        }
+      }
+
+      animId = requestAnimationFrame(loop);
+    };
+
+    animId = requestAnimationFrame(loop);
+    return () => {
+      cancelAnimationFrame(animId);
+      if (resumeTimer.current) clearTimeout(resumeTimer.current);
+    };
+  }, [isPaused, playingId, direction]);
 
   const togglePlay = (rev: TestimonialReview, keyPrefix: string, e?: React.MouseEvent) => {
     if (e) {
@@ -48,19 +109,9 @@ export default function ReviewsSection() {
     const clickedKey = `${keyPrefix}-${rev.id}`;
 
     if (playingId === rev.id) {
-      Object.entries(videoElements.current).forEach(([k, el]) => {
-        if (k.endsWith(`-${rev.id}`) && el) {
-          el.pause();
-        }
-      });
-      setPlayingId(null);
-      setActiveKey(null);
+      pauseAllVideos();
     } else {
-      Object.values(videoElements.current).forEach((el) => {
-        if (el) {
-          el.pause();
-        }
-      });
+      pauseAllVideos();
 
       const primaryVideo =
         videoElements.current[clickedKey] ||
@@ -157,7 +208,7 @@ export default function ReviewsSection() {
             }}
           />
 
-          {/* Sound Control for active card */}
+          {/* Sound Control for active card on top-left */}
           {isPlaying && (
             <div className="reel-card-top-controls" onClick={(e) => e.stopPropagation()}>
               <button
@@ -201,28 +252,25 @@ export default function ReviewsSection() {
             </div>
           )}
 
-          {/* Testimonial Quote & Info Overlay at Bottom */}
-          <div className={`testimonial-card-meta ${isPlaying ? "playing" : ""}`}>
-            <h3 className="testimonial-author-name">
-              {rev.name}
-              <span className="testimonial-author-country"> · {rev.location}</span>
-            </h3>
-            <p className="testimonial-author-quote">&ldquo;{rev.quote}&rdquo;</p>
+          {/* Quote & Author Info Overlay */}
+          <div className="testimonial-card-meta">
+            <p className="testimonial-quote">&ldquo;{rev.quote}&rdquo;</p>
+            <div className="testimonial-author">
+              <span className="author-name">{rev.name}</span>
+              <span className="author-loc">{rev.location}</span>
+            </div>
           </div>
 
-          {/* Play / Pause Pill Button */}
-          <div
-            className={`reel-card-pill ${isPlaying ? "playing" : ""}`}
-            aria-label={`${isPlaying ? "Pause" : "Play"} review by ${rev.name}`}
-          >
+          {/* Play / Action Pill */}
+          <div className={`reel-card-pill ${isPlaying ? "playing" : ""}`}>
             <span className="reel-play-icon" aria-hidden="true">
               {isPlaying ? (
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor">
+                <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor">
                   <rect x="6" y="4" width="4" height="16" />
                   <rect x="14" y="4" width="4" height="16" />
                 </svg>
               ) : (
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor">
+                <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor">
                   <polygon points="5 3 19 12 5 21 5 3" />
                 </svg>
               )}
@@ -263,31 +311,36 @@ export default function ReviewsSection() {
           </div>
         </div>
 
-        {/* TESTIMONIALS INFINITE MARQUEE TRACK */}
-        <div className="reel-marquee-wrapper">
+        {/* FULLY SCROLLABLE & SWIPEABLE TESTIMONIALS TRACK WITH SEAMLESS AUTO-SCROLL LOOP */}
+        <div className="reel-carousel-wrapper">
           <div
-            className={`reel-marquee-row ${isPaused || playingId !== null ? "is-paused" : ""} ${
-              direction === "reverse" ? "is-reverse" : "is-normal"
-            }`}
+            className="reel-cards-track"
+            ref={trackRef}
+            onTouchStart={handleTouchStart}
+            onTouchEnd={handleTouchEnd}
+            onTouchCancel={handleTouchEnd}
+            onWheel={handleWheel}
+            onMouseEnter={() => {
+              isInteracting.current = true;
+            }}
+            onMouseLeave={() => {
+              isInteracting.current = false;
+            }}
           >
-            <div className="reel-marquee-group">
-              {TESTIMONIAL_REVIEWS.map((rev) =>
-                renderReviewCard(rev, "rev1")
-              )}
-            </div>
-            <div className="reel-marquee-group" aria-hidden="true">
-              {TESTIMONIAL_REVIEWS.map((rev) =>
-                renderReviewCard(rev, "rev2")
-              )}
-            </div>
+            {TESTIMONIAL_REVIEWS.map((rev) =>
+              renderReviewCard(rev, "rev1")
+            )}
+            {TESTIMONIAL_REVIEWS.map((rev) =>
+              renderReviewCard(rev, "rev2")
+            )}
           </div>
 
-          {/* DIRECTION & PAUSE CONTROLS */}
+          {/* DIRECTION, MANUAL SCROLL & PAUSE CONTROLS */}
           <div className="reel-nav-controls">
             <button
               type="button"
-              className={`reel-nav-btn ${direction === "reverse" && !isPaused ? "active-arrow" : ""}`}
-              onClick={() => handleDirection("reverse")}
+              className="reel-nav-btn"
+              onClick={scrollLeft}
               aria-label="Scroll testimonials left"
               title="Move left"
             >
@@ -326,8 +379,8 @@ export default function ReviewsSection() {
             </button>
             <button
               type="button"
-              className={`reel-nav-btn ${direction === "normal" && !isPaused ? "active-arrow" : ""}`}
-              onClick={() => handleDirection("normal")}
+              className="reel-nav-btn"
+              onClick={scrollRight}
               aria-label="Scroll testimonials right"
               title="Move right"
             >
