@@ -1821,13 +1821,40 @@ video {
 
 @media (max-width: 768px) {
 
-  /* RESPONSIVE HERO IMAGES: SWITCH DESKTOP TO MOBILE IMAGE */
+  /* RESPONSIVE HERO: FULL IMAGE VISIBILITY ON MOBILE WITH NATURAL ASPECT RATIO */
+  .hero-section {
+    min-height: unset;
+    height: auto;
+    width: 100%;
+    position: relative;
+    overflow: hidden;
+    display: block;
+  }
+
+  .hero-image-container {
+    position: relative;
+    top: auto;
+    left: auto;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 723 / 1024;
+    overflow: hidden;
+  }
+
   .hero-image-desktop {
-    display: none;
+    display: none !important;
   }
 
   .hero-image-mobile {
-    display: block;
+    display: block !important;
+    position: relative;
+    top: auto;
+    left: auto;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 723 / 1024;
+    object-fit: contain;
+    object-position: center;
   }
 
   /* Header adjustments on mobile */
