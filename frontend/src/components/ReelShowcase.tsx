@@ -236,6 +236,7 @@ export default function ReelShowcase() {
                 }
               }}
               src={item.videoSrc}
+              poster={item.thumbnail}
               className="reel-card-video"
               playsInline
               preload="none"

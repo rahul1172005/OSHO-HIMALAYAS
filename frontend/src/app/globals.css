@@ -538,6 +538,7 @@ video {
   transform: translateZ(0);
   -webkit-transform: translateZ(0);
   -webkit-mask-image: -webkit-radial-gradient(white, black);
+  mask-image: radial-gradient(white, black);
 }
 
 .reel-card-video {
