@@ -424,7 +424,7 @@ video {
 
 .hero-headline {
   font-family: var(--font-headline);
-  font-size: clamp(1.35rem, 2.25vw, 2.1rem);
+  font-size: clamp(1.15rem, 1.8vw, 1.65rem);
   font-weight: 600;
   color: #18223d;
   line-height: 1.35;
@@ -1818,11 +1818,11 @@ video {
   }
 
   .hero-headline {
-    font-size: 1.45rem;
+    font-size: 1.2rem;
     font-weight: 600;
     color: #18223d;
     white-space: normal;
-    max-width: 320px;
+    max-width: 290px;
     line-height: 1.35;
     margin: 0 auto;
     letter-spacing: -0.01em;
