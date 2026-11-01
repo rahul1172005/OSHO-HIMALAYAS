@@ -5,10 +5,11 @@ import { TESTIMONIAL_REVIEWS, TestimonialReview } from "@/lib/landingData";
 
 export default function ReviewsSection() {
   const [playingId, setPlayingId] = useState<string | null>(null);
+  const [activeKey, setActiveKey] = useState<string | null>(null);
   const [isMuted, setIsMuted] = useState(false);
   const [direction, setDirection] = useState<"normal" | "reverse">("normal");
   const [isPaused, setIsPaused] = useState(false);
-  const videoRefs = useRef<{ [key: string]: HTMLVideoElement | null }>({});
+  const videoElements = useRef<{ [key: string]: HTMLVideoElement | null }>({});
 
   const togglePause = () => {
     setIsPaused((prev) => !prev);
@@ -19,52 +20,94 @@ export default function ReviewsSection() {
     setIsPaused(false);
   };
 
-  const togglePlay = (id: string, e?: React.MouseEvent) => {
+  const togglePlay = (rev: TestimonialReview, keyPrefix: string, e?: React.MouseEvent) => {
     if (e) {
       e.stopPropagation();
     }
 
-    if (playingId === id) {
-      const currentVideo = videoRefs.current[id];
-      if (currentVideo) {
-        currentVideo.pause();
-      }
+    const clickedKey = `${keyPrefix}-${rev.id}`;
+
+    if (playingId === rev.id) {
+      Object.entries(videoElements.current).forEach(([k, el]) => {
+        if (k.endsWith(`-${rev.id}`) && el) {
+          el.pause();
+        }
+      });
       setPlayingId(null);
+      setActiveKey(null);
     } else {
-      if (playingId && videoRefs.current[playingId]) {
-        videoRefs.current[playingId]?.pause();
+      Object.values(videoElements.current).forEach((el) => {
+        if (el) {
+          el.pause();
+        }
+      });
+
+      const primaryVideo =
+        videoElements.current[clickedKey] ||
+        (e?.currentTarget?.querySelector("video") as HTMLVideoElement | null);
+
+      if (primaryVideo) {
+        primaryVideo.currentTime = 0;
+        primaryVideo.muted = isMuted;
+
+        const playPromise = primaryVideo.play();
+        if (playPromise !== undefined) {
+          playPromise.catch((err) => {
+            console.warn("Unmuted autoplay restricted by browser; retrying muted:", err);
+            primaryVideo.muted = true;
+            setIsMuted(true);
+            primaryVideo.play().catch((err2) => {
+              console.error("Testimonial video play failed:", err2);
+            });
+          });
+        }
       }
 
-      const targetVideo = videoRefs.current[id];
-      if (targetVideo) {
-        targetVideo.currentTime = 0;
-        targetVideo.play().catch((err) => {
-          console.warn("Video playback was interrupted or restricted:", err);
-        });
-      }
-      setPlayingId(id);
+      // Sync clone instance in second track (muted to prevent echo)
+      Object.entries(videoElements.current).forEach(([k, el]) => {
+        if (k.endsWith(`-${rev.id}`) && el && el !== primaryVideo) {
+          el.currentTime = 0;
+          el.muted = true;
+          el.play().catch(() => {});
+        }
+      });
+
+      setPlayingId(rev.id);
+      setActiveKey(clickedKey);
     }
   };
 
   const toggleMute = (e: React.MouseEvent) => {
     e.stopPropagation();
-    setIsMuted((prev) => !prev);
+    const nextMuted = !isMuted;
+    setIsMuted(nextMuted);
+
+    if (activeKey && videoElements.current[activeKey]) {
+      videoElements.current[activeKey]!.muted = nextMuted;
+    } else if (playingId) {
+      Object.entries(videoElements.current).forEach(([k, el]) => {
+        if (k.endsWith(`-${playingId}`) && el) {
+          el.muted = nextMuted;
+        }
+      });
+    }
   };
 
   const renderReviewCard = (rev: TestimonialReview, keyPrefix: string) => {
     const isPlaying = playingId === rev.id;
+    const cardKey = `${keyPrefix}-${rev.id}`;
 
     return (
       <div
-        key={`${keyPrefix}-${rev.id}`}
+        key={cardKey}
         className={`reel-card testimonial-reel-card ${isPlaying ? "is-playing" : ""}`}
-        onClick={(e) => togglePlay(rev.id, e)}
+        onClick={(e) => togglePlay(rev, keyPrefix, e)}
         role="button"
         tabIndex={0}
         onKeyDown={(e) => {
           if (e.key === "Enter" || e.key === " ") {
             e.preventDefault();
-            togglePlay(rev.id);
+            togglePlay(rev, keyPrefix);
           }
         }}
         aria-label={`${isPlaying ? "Pause" : "Play"} ${rev.name} video review`}
@@ -76,15 +119,22 @@ export default function ReviewsSection() {
           {/* HTML5 Native Video Player */}
           <video
             ref={(el) => {
-              videoRefs.current[rev.id] = el;
+              if (el) {
+                videoElements.current[cardKey] = el;
+              } else {
+                delete videoElements.current[cardKey];
+              }
             }}
             src={rev.videoSrc}
             className="reel-card-video"
             playsInline
-            preload="metadata"
+            preload="auto"
             muted={isMuted}
             loop
-            onEnded={() => setPlayingId(null)}
+            onEnded={() => {
+              setPlayingId(null);
+              setActiveKey(null);
+            }}
           />
 
           {/* Sound Control for active card */}
@@ -141,10 +191,8 @@ export default function ReviewsSection() {
           </div>
 
           {/* Play / Pause Pill Button */}
-          <button
-            type="button"
+          <div
             className={`reel-card-pill ${isPlaying ? "playing" : ""}`}
-            onClick={(e) => togglePlay(rev.id, e)}
             aria-label={`${isPlaying ? "Pause" : "Play"} review by ${rev.name}`}
           >
             <span className="reel-play-icon" aria-hidden="true">
@@ -162,7 +210,7 @@ export default function ReviewsSection() {
             <span className="reel-pill-label">
               {isPlaying ? `Pause: ${rev.name}` : rev.name}
             </span>
-          </button>
+          </div>
         </div>
       </div>
     );

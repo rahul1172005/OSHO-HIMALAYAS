@@ -5,11 +5,14 @@ import { REEL_ITEMS, ReelItem } from "@/lib/landingData";
 
 export default function ReelShowcase() {
   const [playingId, setPlayingId] = useState<string | null>(null);
+  const [activeKey, setActiveKey] = useState<string | null>(null);
   const [isMuted, setIsMuted] = useState(false);
   const [direction, setDirection] = useState<"normal" | "reverse">("normal");
   const [isPaused, setIsPaused] = useState(false);
   const [activeModalReel, setActiveModalReel] = useState<ReelItem | null>(null);
-  const videoRefs = useRef<{ [key: string]: HTMLVideoElement | null }>({});
+
+  // Store video elements by compound key: `${keyPrefix}-${item.id}`
+  const videoElements = useRef<{ [key: string]: HTMLVideoElement | null }>({});
 
   const togglePause = () => {
     setIsPaused((prev) => !prev);
@@ -20,42 +23,73 @@ export default function ReelShowcase() {
     setIsPaused(false);
   };
 
-  const handleCardClick = (item: ReelItem, e?: React.MouseEvent) => {
+  const handleCardClick = (item: ReelItem, keyPrefix: string, e?: React.MouseEvent) => {
     if (e) {
       e.stopPropagation();
     }
 
     // If item is Instagram reel, open modal popup in reel dimensions
     if (item.videoType === "instagram") {
-      if (playingId && videoRefs.current[playingId]) {
-        videoRefs.current[playingId]?.pause();
-        setPlayingId(null);
-      }
+      // Pause all local videos
+      Object.values(videoElements.current).forEach((v) => v?.pause());
+      setPlayingId(null);
+      setActiveKey(null);
       setActiveModalReel(item);
       return;
     }
 
-    // Otherwise toggle local video playback
+    const clickedKey = `${keyPrefix}-${item.id}`;
+
+    // If this item is already playing, clicking toggles pause
     if (playingId === item.id) {
-      const currentVideo = videoRefs.current[item.id];
-      if (currentVideo) {
-        currentVideo.pause();
-      }
+      Object.entries(videoElements.current).forEach(([k, el]) => {
+        if (k.endsWith(`-${item.id}`) && el) {
+          el.pause();
+        }
+      });
       setPlayingId(null);
+      setActiveKey(null);
     } else {
-      if (playingId && videoRefs.current[playingId]) {
-        videoRefs.current[playingId]?.pause();
+      // Pause any previously playing video across the showcase
+      Object.values(videoElements.current).forEach((el) => {
+        if (el) {
+          el.pause();
+        }
+      });
+
+      // Get the primary video element for the card that was clicked
+      const primaryVideo =
+        videoElements.current[clickedKey] ||
+        (e?.currentTarget?.querySelector("video") as HTMLVideoElement | null);
+
+      if (primaryVideo) {
+        primaryVideo.currentTime = 0;
+        primaryVideo.muted = isMuted;
+
+        const playPromise = primaryVideo.play();
+        if (playPromise !== undefined) {
+          playPromise.catch((err) => {
+            console.warn("Unmuted playback restricted by browser policy; retrying muted:", err);
+            primaryVideo.muted = true;
+            setIsMuted(true);
+            primaryVideo.play().catch((err2) => {
+              console.error("Video play failed:", err2);
+            });
+          });
+        }
       }
 
-      const targetVideo = videoRefs.current[item.id];
-      if (targetVideo) {
-        targetVideo.currentTime = 0;
-        targetVideo.muted = isMuted;
-        targetVideo.play().catch((err) => {
-          console.warn("Video playback was interrupted or restricted:", err);
-        });
-      }
+      // Sync any duplicate clone in the other marquee track (muted to prevent echo)
+      Object.entries(videoElements.current).forEach(([k, el]) => {
+        if (k.endsWith(`-${item.id}`) && el && el !== primaryVideo) {
+          el.currentTime = 0;
+          el.muted = true;
+          el.play().catch(() => {});
+        }
+      });
+
       setPlayingId(item.id);
+      setActiveKey(clickedKey);
     }
   };
 
@@ -63,26 +97,35 @@ export default function ReelShowcase() {
     e.stopPropagation();
     const nextMuted = !isMuted;
     setIsMuted(nextMuted);
-    if (playingId && videoRefs.current[playingId]) {
-      videoRefs.current[playingId]!.muted = nextMuted;
+
+    if (activeKey && videoElements.current[activeKey]) {
+      videoElements.current[activeKey]!.muted = nextMuted;
+    } else if (playingId) {
+      // Fallback: apply to the first active instance
+      Object.entries(videoElements.current).forEach(([k, el]) => {
+        if (k.endsWith(`-${playingId}`) && el) {
+          el.muted = nextMuted;
+        }
+      });
     }
   };
 
   const renderCard = (item: ReelItem, keyPrefix: string) => {
     const isPlaying = playingId === item.id;
     const isInstagram = item.videoType === "instagram";
+    const cardKey = `${keyPrefix}-${item.id}`;
 
     return (
       <div
-        key={`${keyPrefix}-${item.id}`}
+        key={cardKey}
         className={`reel-card ${isPlaying ? "is-playing" : ""}`}
-        onClick={(e) => handleCardClick(item, e)}
+        onClick={(e) => handleCardClick(item, keyPrefix, e)}
         role="button"
         tabIndex={0}
         onKeyDown={(e) => {
           if (e.key === "Enter" || e.key === " ") {
             e.preventDefault();
-            handleCardClick(item);
+            handleCardClick(item, keyPrefix);
           }
         }}
         aria-label={`${isPlaying ? "Pause" : "Play"} ${item.title} video`}
@@ -95,15 +138,22 @@ export default function ReelShowcase() {
           {!isInstagram && item.videoSrc && (
             <video
               ref={(el) => {
-                videoRefs.current[item.id] = el;
+                if (el) {
+                  videoElements.current[cardKey] = el;
+                } else {
+                  delete videoElements.current[cardKey];
+                }
               }}
               src={item.videoSrc}
               className="reel-card-video"
               playsInline
-              preload="metadata"
+              preload="auto"
               muted={isMuted}
               loop
-              onEnded={() => setPlayingId(null)}
+              onEnded={() => {
+                setPlayingId(null);
+                setActiveKey(null);
+              }}
             />
           )}
 

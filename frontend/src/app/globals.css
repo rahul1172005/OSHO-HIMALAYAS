@@ -574,7 +574,7 @@ video {
 
 .reel-card.is-playing .reel-card-video {
   opacity: 1;
-  pointer-events: auto;
+  pointer-events: none;
 }
 
 /* NO FILTER ON CARDS */
