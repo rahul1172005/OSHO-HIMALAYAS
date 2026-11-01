@@ -6,6 +6,8 @@ import { TESTIMONIAL_REVIEWS, TestimonialReview } from "@/lib/landingData";
 export default function ReviewsSection() {
   const [playingId, setPlayingId] = useState<string | null>(null);
   const [activeKey, setActiveKey] = useState<string | null>(null);
+  const [isBuffering, setIsBuffering] = useState(false);
+  const [isReady, setIsReady] = useState(false);
   const [isMuted, setIsMuted] = useState(false);
   const [direction, setDirection] = useState<"normal" | "reverse">("normal");
   const [isPaused, setIsPaused] = useState(false);
@@ -17,10 +19,16 @@ export default function ReviewsSection() {
 
   const pauseAllVideos = () => {
     Object.values(videoElements.current).forEach((el) => {
-      if (el) el.pause();
+      if (el) {
+        try {
+          el.pause();
+        } catch (_) {}
+      }
     });
     setPlayingId(null);
     setActiveKey(null);
+    setIsBuffering(false);
+    setIsReady(false);
   };
 
   const scrollLeft = () => {
@@ -55,7 +63,7 @@ export default function ReviewsSection() {
     if (resumeTimer.current) clearTimeout(resumeTimer.current);
     resumeTimer.current = setTimeout(() => {
       isInteracting.current = false;
-    }, 2000);
+    }, 1500);
   };
 
   const handleWheel = () => {
@@ -63,7 +71,21 @@ export default function ReviewsSection() {
     if (resumeTimer.current) clearTimeout(resumeTimer.current);
     resumeTimer.current = setTimeout(() => {
       isInteracting.current = false;
-    }, 2000);
+    }, 1500);
+  };
+
+  // Seamless wrap-around listener for touch, wheel & scroll
+  const handleScroll = () => {
+    const track = trackRef.current;
+    if (!track) return;
+    const half = track.scrollWidth / 2;
+    if (half > 0) {
+      if (track.scrollLeft >= half) {
+        track.scrollLeft -= half;
+      } else if (track.scrollLeft <= 0 && direction === "reverse") {
+        track.scrollLeft += half;
+      }
+    }
   };
 
   // Continuous auto-scroll loop with seamless wrap-around
@@ -77,18 +99,9 @@ export default function ReviewsSection() {
 
       const track = trackRef.current;
       if (track && !isPaused && !playingId && !isInteracting.current) {
-        const pxPerSec = direction === "normal" ? 30 : -30;
-        const move = (pxPerSec * dt) / 1000;
+        const pxPerSec = direction === "normal" ? 28 : -28;
+        const move = (pxPerSec * Math.min(dt, 50)) / 1000;
         track.scrollLeft += move;
-
-        const half = track.scrollWidth / 2;
-        if (half > 0) {
-          if (track.scrollLeft >= half) {
-            track.scrollLeft -= half;
-          } else if (track.scrollLeft <= 0 && direction === "reverse") {
-            track.scrollLeft += half;
-          }
-        }
       }
 
       animId = requestAnimationFrame(loop);
@@ -108,43 +121,56 @@ export default function ReviewsSection() {
 
     const clickedKey = `${keyPrefix}-${rev.id}`;
 
-    if (playingId === rev.id) {
-      pauseAllVideos();
-    } else {
-      pauseAllVideos();
+    // If currently playing this card, toggle pause
+    if (playingId === rev.id && activeKey === clickedKey) {
+      const currentVideo = videoElements.current[clickedKey];
+      if (currentVideo && !currentVideo.paused) {
+        currentVideo.pause();
+        pauseAllVideos();
+        return;
+      }
+    }
 
-      const primaryVideo =
-        videoElements.current[clickedKey] ||
-        (e?.currentTarget?.querySelector("video") as HTMLVideoElement | null);
+    // Pause all others before playing this card
+    pauseAllVideos();
 
-      if (primaryVideo) {
-        primaryVideo.currentTime = 0;
-        primaryVideo.muted = isMuted;
+    const primaryVideo =
+      videoElements.current[clickedKey] ||
+      (e?.currentTarget?.querySelector("video") as HTMLVideoElement | null);
 
-        const playPromise = primaryVideo.play();
-        if (playPromise !== undefined) {
-          playPromise.catch((err) => {
+    if (primaryVideo) {
+      setPlayingId(rev.id);
+      setActiveKey(clickedKey);
+      setIsBuffering(true);
+      setIsReady(false);
+
+      primaryVideo.currentTime = 0;
+      primaryVideo.muted = isMuted;
+
+      const playPromise = primaryVideo.play();
+      if (playPromise !== undefined) {
+        playPromise
+          .then(() => {
+            setIsBuffering(false);
+            setIsReady(true);
+          })
+          .catch((err) => {
             console.warn("Unmuted autoplay restricted by browser; retrying muted:", err);
             primaryVideo.muted = true;
             setIsMuted(true);
-            primaryVideo.play().catch((err2) => {
-              console.error("Testimonial video play failed:", err2);
-            });
+            primaryVideo
+              .play()
+              .then(() => {
+                setIsBuffering(false);
+                setIsReady(true);
+              })
+              .catch((err2) => {
+                console.error("Testimonial video play failed:", err2);
+                setIsBuffering(false);
+                pauseAllVideos();
+              });
           });
-        }
       }
-
-      // Sync clone instance in second track (muted to prevent echo)
-      Object.entries(videoElements.current).forEach(([k, el]) => {
-        if (k.endsWith(`-${rev.id}`) && el && el !== primaryVideo) {
-          el.currentTime = 0;
-          el.muted = true;
-          el.play().catch(() => {});
-        }
-      });
-
-      setPlayingId(rev.id);
-      setActiveKey(clickedKey);
     }
   };
 
@@ -155,23 +181,20 @@ export default function ReviewsSection() {
 
     if (activeKey && videoElements.current[activeKey]) {
       videoElements.current[activeKey]!.muted = nextMuted;
-    } else if (playingId) {
-      Object.entries(videoElements.current).forEach(([k, el]) => {
-        if (k.endsWith(`-${playingId}`) && el) {
-          el.muted = nextMuted;
-        }
-      });
     }
   };
 
   const renderReviewCard = (rev: TestimonialReview, keyPrefix: string) => {
     const isPlaying = playingId === rev.id;
     const cardKey = `${keyPrefix}-${rev.id}`;
+    const isActiveCard = activeKey === cardKey;
+    const showBuffering = isActiveCard && isBuffering;
+    const showReady = isActiveCard && isReady;
 
     return (
       <div
         key={cardKey}
-        className={`reel-card testimonial-reel-card ${isPlaying ? "is-playing" : ""}`}
+        className={`reel-card testimonial-reel-card ${isPlaying && isActiveCard ? "is-playing" : ""} ${showReady ? "is-ready" : ""} ${showBuffering ? "is-buffering" : ""}`}
         onClick={(e) => togglePlay(rev, keyPrefix, e)}
         role="button"
         tabIndex={0}
@@ -181,13 +204,13 @@ export default function ReviewsSection() {
             togglePlay(rev, keyPrefix);
           }
         }}
-        aria-label={`${isPlaying ? "Pause" : "Play"} ${rev.name} video review`}
+        aria-label={`${isPlaying && isActiveCard ? "Pause" : "Play"} ${rev.name} video review`}
       >
         <div
           className="reel-card-media"
           style={{ backgroundImage: `url(${rev.thumbnail})` }}
         >
-          {/* HTML5 Native Video Player */}
+          {/* HTML5 Native Video Player - On demand (preload="none") */}
           <video
             ref={(el) => {
               if (el) {
@@ -199,17 +222,32 @@ export default function ReviewsSection() {
             src={rev.videoSrc}
             className="reel-card-video"
             playsInline
-            preload="auto"
+            preload="none"
             muted={isMuted}
             loop
+            onPlaying={() => {
+              if (activeKey === cardKey) {
+                setIsBuffering(false);
+                setIsReady(true);
+              }
+            }}
+            onWaiting={() => {
+              if (activeKey === cardKey) {
+                setIsBuffering(true);
+              }
+            }}
+            onCanPlay={() => {
+              if (activeKey === cardKey) {
+                setIsBuffering(false);
+              }
+            }}
             onEnded={() => {
-              setPlayingId(null);
-              setActiveKey(null);
+              pauseAllVideos();
             }}
           />
 
           {/* Sound Control for active card on top-left */}
-          {isPlaying && (
+          {isPlaying && isActiveCard && isReady && (
             <div className="reel-card-top-controls" onClick={(e) => e.stopPropagation()}>
               <button
                 type="button"
@@ -253,9 +291,14 @@ export default function ReviewsSection() {
           )}
 
           {/* Play / Action Pill */}
-          <div className={`reel-card-pill ${isPlaying ? "playing" : ""}`}>
+          <div className={`reel-card-pill ${isPlaying && isActiveCard ? "playing" : ""}`}>
             <span className="reel-play-icon" aria-hidden="true">
-              {isPlaying ? (
+              {isPlaying && isActiveCard && isBuffering ? (
+                <svg className="animate-spin" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                  <circle cx="12" cy="12" r="10" strokeOpacity="0.25" />
+                  <path d="M12 2a10 10 0 0 1 10 10" strokeLinecap="round" />
+                </svg>
+              ) : isPlaying && isActiveCard ? (
                 <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor">
                   <rect x="6" y="4" width="4" height="16" />
                   <rect x="14" y="4" width="4" height="16" />
@@ -267,7 +310,13 @@ export default function ReviewsSection() {
               )}
             </span>
             <span className="reel-pill-label">
-              {isPlaying ? (isMuted ? "Playing (muted)" : "Playing with sound") : `${rev.name} (${rev.location})`}
+              {isPlaying && isActiveCard
+                ? isBuffering
+                  ? "Loading..."
+                  : isMuted
+                  ? "Playing (muted)"
+                  : "Playing with sound"
+                : `${rev.name} (${rev.location})`}
             </span>
           </div>
         </div>
@@ -307,6 +356,7 @@ export default function ReviewsSection() {
           <div
             className="reel-cards-track"
             ref={trackRef}
+            onScroll={handleScroll}
             onTouchStart={handleTouchStart}
             onTouchEnd={handleTouchEnd}
             onTouchCancel={handleTouchEnd}

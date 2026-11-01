@@ -43,7 +43,7 @@ export default function PhotoCarousel() {
     if (resumeTimer.current) clearTimeout(resumeTimer.current);
     resumeTimer.current = setTimeout(() => {
       isInteracting.current = false;
-    }, 2000);
+    }, 1500);
   };
 
   const handleWheel = () => {
@@ -51,7 +51,25 @@ export default function PhotoCarousel() {
     if (resumeTimer.current) clearTimeout(resumeTimer.current);
     resumeTimer.current = setTimeout(() => {
       isInteracting.current = false;
-    }, 2000);
+    }, 1500);
+  };
+
+  const handleScrollRow1 = () => {
+    const r1 = row1Ref.current;
+    if (!r1) return;
+    const half1 = r1.scrollWidth / 2;
+    if (half1 > 0 && r1.scrollLeft >= half1) {
+      r1.scrollLeft -= half1;
+    }
+  };
+
+  const handleScrollRow2 = () => {
+    const r2 = row2Ref.current;
+    if (!r2) return;
+    const half2 = r2.scrollWidth / 2;
+    if (half2 > 0 && r2.scrollLeft >= half2) {
+      r2.scrollLeft -= half2;
+    }
   };
 
   // Continuous smooth auto-scroll drift with seamless loop wrap-around
@@ -68,22 +86,14 @@ export default function PhotoCarousel() {
 
       if (!isPaused && !isInteracting.current) {
         const speed = 25; // px per second
-        const move = (speed * dt) / 1000;
+        const move = (speed * Math.min(dt, 50)) / 1000;
 
         if (r1) {
           r1.scrollLeft += move;
-          const half1 = r1.scrollWidth / 2;
-          if (half1 > 0 && r1.scrollLeft >= half1) {
-            r1.scrollLeft -= half1;
-          }
         }
 
         if (r2) {
           r2.scrollLeft += move;
-          const half2 = r2.scrollWidth / 2;
-          if (half2 > 0 && r2.scrollLeft >= half2) {
-            r2.scrollLeft -= half2;
-          }
         }
       }
 
@@ -232,6 +242,7 @@ export default function PhotoCarousel() {
         <div
           className="photo-marquee-row"
           ref={row1Ref}
+          onScroll={handleScrollRow1}
           onTouchStart={handleTouchStart}
           onTouchEnd={handleTouchEnd}
           onTouchCancel={handleTouchEnd}
@@ -255,6 +266,7 @@ export default function PhotoCarousel() {
         <div
           className="photo-marquee-row"
           ref={row2Ref}
+          onScroll={handleScrollRow2}
           onTouchStart={handleTouchStart}
           onTouchEnd={handleTouchEnd}
           onTouchCancel={handleTouchEnd}

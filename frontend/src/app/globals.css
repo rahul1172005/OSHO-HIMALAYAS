@@ -491,6 +491,8 @@ video {
   scrollbar-width: none;
   -webkit-overflow-scrolling: touch;
   padding-bottom: 8px;
+  will-change: scroll-position;
+  transform: translateZ(0);
 }
 
 .reel-cards-track::-webkit-scrollbar {
@@ -507,6 +509,9 @@ video {
   outline: none;
   background-color: #101726;
   filter: none !important;
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
+  contain: layout paint;
 }
 
 .reel-card:hover {
@@ -528,6 +533,9 @@ video {
   overflow: hidden;
   background-color: #101726;
   filter: none !important;
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
+  -webkit-mask-image: -webkit-radial-gradient(white, black);
 }
 
 .reel-card-video {
@@ -541,13 +549,20 @@ video {
   z-index: 2;
   opacity: 0;
   pointer-events: none;
-  transition: opacity var(--transition-normal);
+  transition: opacity 0.35s ease;
   filter: none !important;
+  background: #000000;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
 }
 
-.reel-card.is-playing .reel-card-video {
+.reel-card.is-playing.is-ready .reel-card-video {
   opacity: 1;
   pointer-events: none;
+}
+
+.reel-card.is-buffering .reel-card-video {
+  opacity: 0;
 }
 
 /* NO FILTER ON CARDS */
@@ -614,6 +629,22 @@ video {
 
 .reel-play-icon {
   font-size: 0.75rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.animate-spin {
+  animation: spin 0.9s linear infinite;
 }
 
 .reel-nav-controls {
@@ -857,6 +888,8 @@ video {
   scrollbar-width: none;
   -webkit-overflow-scrolling: touch;
   padding-bottom: 4px;
+  will-change: scroll-position;
+  transform: translateZ(0);
 }
 
 .photo-marquee-row::-webkit-scrollbar {
@@ -919,6 +952,9 @@ video {
   position: relative;
   cursor: pointer;
   transition: transform var(--transition-normal);
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
+  contain: layout paint;
 }
 
 .photo-card:hover {

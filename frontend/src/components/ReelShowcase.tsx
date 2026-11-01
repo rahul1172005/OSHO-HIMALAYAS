@@ -6,6 +6,8 @@ import { REEL_ITEMS, ReelItem } from "@/lib/landingData";
 export default function ReelShowcase() {
   const [playingId, setPlayingId] = useState<string | null>(null);
   const [activeKey, setActiveKey] = useState<string | null>(null);
+  const [isBuffering, setIsBuffering] = useState(false);
+  const [isReady, setIsReady] = useState(false);
   const [isMuted, setIsMuted] = useState(false);
   const [direction, setDirection] = useState<"normal" | "reverse">("normal");
   const [isPaused, setIsPaused] = useState(false);
@@ -18,10 +20,16 @@ export default function ReelShowcase() {
 
   const pauseAllVideos = () => {
     Object.values(videoElements.current).forEach((el) => {
-      if (el) el.pause();
+      if (el) {
+        try {
+          el.pause();
+        } catch (_) {}
+      }
     });
     setPlayingId(null);
     setActiveKey(null);
+    setIsBuffering(false);
+    setIsReady(false);
   };
 
   const scrollLeft = () => {
@@ -62,7 +70,7 @@ export default function ReelShowcase() {
     if (resumeTimer.current) clearTimeout(resumeTimer.current);
     resumeTimer.current = setTimeout(() => {
       isInteracting.current = false;
-    }, 2000);
+    }, 1500);
   };
 
   const handleWheel = () => {
@@ -70,10 +78,24 @@ export default function ReelShowcase() {
     if (resumeTimer.current) clearTimeout(resumeTimer.current);
     resumeTimer.current = setTimeout(() => {
       isInteracting.current = false;
-    }, 2000);
+    }, 1500);
   };
 
-  // Continuous auto-scroll loop with seamless loop wrap-around
+  // Seamless wrap-around listener for touch, wheel, drag & programmatic scroll
+  const handleScroll = () => {
+    const track = trackRef.current;
+    if (!track) return;
+    const half = track.scrollWidth / 2;
+    if (half > 0) {
+      if (track.scrollLeft >= half) {
+        track.scrollLeft -= half;
+      } else if (track.scrollLeft <= 0 && direction === "reverse") {
+        track.scrollLeft += half;
+      }
+    }
+  };
+
+  // Smooth auto-scroll drift when idle
   useEffect(() => {
     let animId: number;
     let lastTime = performance.now();
@@ -83,20 +105,11 @@ export default function ReelShowcase() {
       lastTime = currentTime;
 
       const track = trackRef.current;
+      // Drift only when unpaused, no video playing, and no manual interaction
       if (track && !isPaused && !playingId && !isInteracting.current) {
-        // ~30px per second drift
-        const pxPerSec = direction === "normal" ? 30 : -30;
-        const move = (pxPerSec * dt) / 1000;
+        const pxPerSec = direction === "normal" ? 28 : -28;
+        const move = (pxPerSec * Math.min(dt, 50)) / 1000;
         track.scrollLeft += move;
-
-        const half = track.scrollWidth / 2;
-        if (half > 0) {
-          if (track.scrollLeft >= half) {
-            track.scrollLeft -= half;
-          } else if (track.scrollLeft <= 0 && direction === "reverse") {
-            track.scrollLeft += half;
-          }
-        }
       }
 
       animId = requestAnimationFrame(loop);
@@ -122,43 +135,56 @@ export default function ReelShowcase() {
 
     const clickedKey = `${keyPrefix}-${item.id}`;
 
-    if (playingId === item.id) {
-      pauseAllVideos();
-    } else {
-      pauseAllVideos();
-
-      const primaryVideo =
-        videoElements.current[clickedKey] ||
-        (e?.currentTarget?.querySelector("video") as HTMLVideoElement | null);
-
-      if (primaryVideo) {
-        primaryVideo.currentTime = 0;
-        primaryVideo.muted = isMuted;
-
-        const playPromise = primaryVideo.play();
-        if (playPromise !== undefined) {
-          playPromise.catch((err) => {
-            console.warn("Unmuted playback restricted by browser policy; retrying muted:", err);
-            primaryVideo.muted = true;
-            setIsMuted(true);
-            primaryVideo.play().catch((err2) => {
-              console.error("Video play failed:", err2);
-            });
-          });
-        }
+    // If tapping the already-playing card, toggle pause/play
+    if (playingId === item.id && activeKey === clickedKey) {
+      const currentVideo = videoElements.current[clickedKey];
+      if (currentVideo && !currentVideo.paused) {
+        currentVideo.pause();
+        pauseAllVideos();
+        return;
       }
+    }
 
-      // Sync any duplicate clone in the other track (muted)
-      Object.entries(videoElements.current).forEach(([k, el]) => {
-        if (k.endsWith(`-${item.id}`) && el && el !== primaryVideo) {
-          el.currentTime = 0;
-          el.muted = true;
-          el.play().catch(() => {});
-        }
-      });
+    // Pause any other active video before playing
+    pauseAllVideos();
 
+    const primaryVideo =
+      videoElements.current[clickedKey] ||
+      (e?.currentTarget?.querySelector("video") as HTMLVideoElement | null);
+
+    if (primaryVideo) {
       setPlayingId(item.id);
       setActiveKey(clickedKey);
+      setIsBuffering(true);
+      setIsReady(false);
+
+      primaryVideo.currentTime = 0;
+      primaryVideo.muted = isMuted;
+
+      const playPromise = primaryVideo.play();
+      if (playPromise !== undefined) {
+        playPromise
+          .then(() => {
+            setIsBuffering(false);
+            setIsReady(true);
+          })
+          .catch((err) => {
+            console.warn("Autoplay with sound restricted, retrying muted:", err);
+            primaryVideo.muted = true;
+            setIsMuted(true);
+            primaryVideo
+              .play()
+              .then(() => {
+                setIsBuffering(false);
+                setIsReady(true);
+              })
+              .catch((err2) => {
+                console.error("Video play failed:", err2);
+                setIsBuffering(false);
+                pauseAllVideos();
+              });
+          });
+      }
     }
   };
 
@@ -169,24 +195,21 @@ export default function ReelShowcase() {
 
     if (activeKey && videoElements.current[activeKey]) {
       videoElements.current[activeKey]!.muted = nextMuted;
-    } else if (playingId) {
-      Object.entries(videoElements.current).forEach(([k, el]) => {
-        if (k.endsWith(`-${playingId}`) && el) {
-          el.muted = nextMuted;
-        }
-      });
     }
   };
 
   const renderCard = (item: ReelItem, keyPrefix: string) => {
     const isPlaying = playingId === item.id;
-    const isInstagram = item.videoType === "instagram";
     const cardKey = `${keyPrefix}-${item.id}`;
+    const isActiveCard = activeKey === cardKey;
+    const isInstagram = item.videoType === "instagram";
+    const showBuffering = isActiveCard && isBuffering;
+    const showReady = isActiveCard && isReady;
 
     return (
       <div
         key={cardKey}
-        className={`reel-card ${isPlaying ? "is-playing" : ""}`}
+        className={`reel-card ${isPlaying && isActiveCard ? "is-playing" : ""} ${showReady ? "is-ready" : ""} ${showBuffering ? "is-buffering" : ""}`}
         onClick={(e) => handleCardClick(item, keyPrefix, e)}
         role="button"
         tabIndex={0}
@@ -196,13 +219,13 @@ export default function ReelShowcase() {
             handleCardClick(item, keyPrefix);
           }
         }}
-        aria-label={`${isPlaying ? "Pause" : "Play"} ${item.title} video`}
+        aria-label={`${isPlaying && isActiveCard ? "Pause" : "Play"} ${item.title} video`}
       >
         <div
           className="reel-card-media"
           style={{ backgroundImage: `url(${item.thumbnail})` }}
         >
-          {/* HTML5 Native Video Player for local files */}
+          {/* HTML5 Native Video Player for local files - On demand loading (preload="none") */}
           {!isInstagram && item.videoSrc && (
             <video
               ref={(el) => {
@@ -215,18 +238,33 @@ export default function ReelShowcase() {
               src={item.videoSrc}
               className="reel-card-video"
               playsInline
-              preload="auto"
+              preload="none"
               muted={isMuted}
               loop
+              onPlaying={() => {
+                if (activeKey === cardKey) {
+                  setIsBuffering(false);
+                  setIsReady(true);
+                }
+              }}
+              onWaiting={() => {
+                if (activeKey === cardKey) {
+                  setIsBuffering(true);
+                }
+              }}
+              onCanPlay={() => {
+                if (activeKey === cardKey) {
+                  setIsBuffering(false);
+                }
+              }}
               onEnded={() => {
-                setPlayingId(null);
-                setActiveKey(null);
+                pauseAllVideos();
               }}
             />
           )}
 
           {/* Sound Control for active card on top-left */}
-          {isPlaying && (
+          {isPlaying && isActiveCard && isReady && (
             <div className="reel-card-top-controls" onClick={(e) => e.stopPropagation()}>
               <button
                 type="button"
@@ -270,9 +308,14 @@ export default function ReelShowcase() {
           )}
 
           {/* Play / Action Pill */}
-          <div className={`reel-card-pill ${isPlaying ? "playing" : ""}`}>
+          <div className={`reel-card-pill ${isPlaying && isActiveCard ? "playing" : ""}`}>
             <span className="reel-play-icon" aria-hidden="true">
-              {isPlaying ? (
+              {isPlaying && isActiveCard && isBuffering ? (
+                <svg className="animate-spin" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                  <circle cx="12" cy="12" r="10" strokeOpacity="0.25" />
+                  <path d="M12 2a10 10 0 0 1 10 10" strokeLinecap="round" />
+                </svg>
+              ) : isPlaying && isActiveCard ? (
                 <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor">
                   <rect x="6" y="4" width="4" height="16" />
                   <rect x="14" y="4" width="4" height="16" />
@@ -284,7 +327,13 @@ export default function ReelShowcase() {
               )}
             </span>
             <span className="reel-pill-label">
-              {isPlaying ? (isMuted ? "Playing (muted)" : "Playing with sound") : item.buttonLabel}
+              {isPlaying && isActiveCard
+                ? isBuffering
+                  ? "Loading..."
+                  : isMuted
+                  ? "Playing (muted)"
+                  : "Playing with sound"
+                : item.buttonLabel}
             </span>
           </div>
         </div>
@@ -315,6 +364,7 @@ export default function ReelShowcase() {
           <div
             className="reel-cards-track"
             ref={trackRef}
+            onScroll={handleScroll}
             onTouchStart={handleTouchStart}
             onTouchEnd={handleTouchEnd}
             onTouchCancel={handleTouchEnd}
