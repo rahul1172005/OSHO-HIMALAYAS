@@ -4,55 +4,34 @@ export default function Footer() {
       <div className="container footer-grid">
         <div className="footer-col-brand">
           <div className="footer-brand-logo">
-            <span className="brand-osho">OSHO</span>
-            <span className="brand-himalayas">Himalayas</span>
+            <img
+              src="/osho-logo.png"
+              alt="OSHO Himalayas Wellness Resort"
+              className="footer-logo-img"
+            />
           </div>
           <p className="footer-brand-desc">
-            An OSHO Meditation Resort in the Himalayas. Step away from city noise and come to this
-            valley where you can breathe pure air, swim in fresh spring water, and dive deep into
-            meditation.
+            A wellness resort for meditation, celebration, and connecting with friends in the pristine
+            Himalayan valley.
           </p>
-          <div className="footer-contact-details">
-            <p><strong>Sanctuary Desk:</strong> info@oshohimalayas.com</p>
-            <p><strong>Location:</strong> Dharamshala, Kangra District, Himachal Pradesh, India</p>
-          </div>
+          <p className="footer-trademark-text">
+            OSHO is a registered trademark of OSHO International Foundation.
+          </p>
+          <p className="footer-disclaimer-text">
+            All OSHO quotes, photos and OSHO Meditation descriptions used with permission of OSHO
+            International Foundation - all rights reserved.
+          </p>
         </div>
 
-        <div>
+        <div className="footer-col-nav">
           <h4 className="footer-col-title">Navigation</h4>
           <ul className="footer-links">
-            <li><a href="#hero" className="footer-link">Home</a></li>
-            <li><a href="#about" className="footer-link">About Sanctuary</a></li>
-            <li><a href="#schedule" className="footer-link">Courses &amp; Schedule</a></li>
-            <li><a href="#reviews" className="footer-link">Guest Reviews</a></li>
+            <li><a href="#schedule" className="footer-link">Courses</a></li>
+            <li><a href="#reviews" className="footer-link">Reviews</a></li>
             <li><a href="#faq" className="footer-link">FAQs</a></li>
-            <li><a href="#reach" className="footer-link">How to Reach</a></li>
-            <li><a href="#virtual-tour" className="footer-link">360° Campus Tour</a></li>
-            <li><a href="#contact-us" className="footer-link">Contact Us</a></li>
-          </ul>
-        </div>
-
-        <div>
-          <h4 className="footer-col-title">Featured Retreats</h4>
-          <ul className="footer-links">
-            <li><a href="#schedule" className="footer-link">Shiva Shakti Retreat</a></li>
-            <li><a href="#schedule" className="footer-link">Festival of Lights</a></li>
-            <li><a href="#schedule" className="footer-link">The Chakra Experience</a></li>
-            <li><a href="#schedule" className="footer-link">Vigyan Bhairav Tantra</a></li>
-            <li><a href="#schedule" className="footer-link">OSHO Born Again</a></li>
-            <li><a href="#schedule" className="footer-link">Path of Love</a></li>
-            <li><a href="#schedule" className="footer-link">OSHO Mystic Rose</a></li>
-          </ul>
-        </div>
-
-        <div>
-          <h4 className="footer-col-title">Sanctuary Amenities</h4>
-          <ul className="footer-links">
-            <li><span className="footer-static-item">OSHO Active Meditations (5x Daily)</span></li>
-            <li><span className="footer-static-item">Pure Natural Spring Swimming Pool</span></li>
-            <li><span className="footer-static-item">Fresh Vegetarian Organic Dining</span></li>
-            <li><span className="footer-static-item">Cedar Forest Silence Walks</span></li>
-            <li><span className="footer-static-item">Open Mountain Gym &amp; Library</span></li>
+            <li><a href="#reach" className="footer-link">How to reach</a></li>
+            <li><a href="#virtual-tour" className="footer-link">Campus tour</a></li>
+            <li><a href="#contact-us" className="footer-link">Contact us</a></li>
           </ul>
         </div>
       </div>

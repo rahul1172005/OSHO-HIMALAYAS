@@ -187,21 +187,45 @@ export default function ReviewsSection() {
           {/* ARROW NAVIGATION */}
           <div className="reel-nav-controls">
             <button
+              type="button"
               className="reel-nav-btn prev"
               onClick={scrollLeft}
               aria-label="Previous testimonials"
+              title="Previous testimonials"
             >
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <path d="M15 18l-6-6 6-6" />
+              <svg
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2.2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                aria-hidden="true"
+              >
+                <polyline points="15 18 9 12 15 6" />
               </svg>
             </button>
             <button
+              type="button"
               className="reel-nav-btn next"
               onClick={scrollRight}
               aria-label="Next testimonials"
+              title="Next testimonials"
             >
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <path d="M9 18l6-6-6-6" />
+              <svg
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2.2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                aria-hidden="true"
+              >
+                <polyline points="9 18 15 12 9 6" />
               </svg>
             </button>
           </div>

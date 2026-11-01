@@ -3,10 +3,9 @@ export interface ReelItem {
   title: string;
   buttonLabel: string;
   thumbnail: string;
-  videoSrc: string;
+  videoSrc?: string;
   videoType?: "local" | "instagram" | "drive" | "youtube";
-  videoUrl?: string;
-  embedUrl?: string;
+  instagramUrl?: string;
 }
 
 export interface ScheduleCourse {
@@ -34,7 +33,12 @@ export interface FaqItem {
 }
 
 // -----------------------------------------------------------------------------
-// SECTION 2: KAYAL-STYLE REEL SHOWCASE
+// SECTION 2: REEL SHOWCASE
+// Updated order:
+// 1. Campus
+// 2. Retreat Life (from Google Drive, replaces the previous end-card)
+// 3. Meditations, Weather, Living In, Nature, Bonfire, People
+// 4. Four new videos: Full moon night, Silence, Sufi whirling, Sound healing
 // -----------------------------------------------------------------------------
 export const REEL_ITEMS: ReelItem[] = [
   {
@@ -43,6 +47,15 @@ export const REEL_ITEMS: ReelItem[] = [
     buttonLabel: "Campus",
     thumbnail: "https://oshohimalayascom.swipepages.media/2025/9/65426ca89707d10018b3de0d/20.jpg",
     videoSrc: "/campus.mp4",
+    videoType: "local",
+  },
+  {
+    id: "retreat-life",
+    title: "Retreat life",
+    buttonLabel: "Retreat life",
+    thumbnail: "https://oshohimalayascom.swipepages.media/2026/8/65426ca89707d10018b3de0d/1-1.webp",
+    videoSrc: "/retreat-life-new.mp4",
+    videoType: "local",
   },
   {
     id: "meditations",
@@ -50,6 +63,7 @@ export const REEL_ITEMS: ReelItem[] = [
     buttonLabel: "Meditations",
     thumbnail: "https://oshohimalayascom.swipepages.media/2026/8/65426ca89707d10018b3de0d/shiva-sakthi-500.webp",
     videoSrc: "/meditations.MOV",
+    videoType: "local",
   },
   {
     id: "weather",
@@ -57,6 +71,7 @@ export const REEL_ITEMS: ReelItem[] = [
     buttonLabel: "Weather",
     thumbnail: "https://oshohimalayascom.swipepages.media/2026/8/65426ca89707d10018b3de0d/untitled-design--7--1500.webp",
     videoSrc: "/weather.mp4",
+    videoType: "local",
   },
   {
     id: "living-in",
@@ -64,6 +79,7 @@ export const REEL_ITEMS: ReelItem[] = [
     buttonLabel: "Living In",
     thumbnail: "https://oshohimalayascom.swipepages.media/2025/9/65426ca89707d10018b3de0d/1.jpg",
     videoSrc: "/living-in.mp4",
+    videoType: "local",
   },
   {
     id: "nature",
@@ -71,13 +87,7 @@ export const REEL_ITEMS: ReelItem[] = [
     buttonLabel: "Nature",
     thumbnail: "https://oshohimalayascom.swipepages.media/2026/8/65426ca89707d10018b3de0d/whatsapp-image-2026-08-01-at-08-24-07-1500.webp",
     videoSrc: "/nature.mp4",
-  },
-  {
-    id: "retreat-life",
-    title: "Retreat Life",
-    buttonLabel: "Retreat Life",
-    thumbnail: "https://oshohimalayascom.swipepages.media/2026/8/65426ca89707d10018b3de0d/1-1.webp",
-    videoSrc: "/lead-video.mp4",
+    videoType: "local",
   },
   {
     id: "bonfire",
@@ -85,6 +95,7 @@ export const REEL_ITEMS: ReelItem[] = [
     buttonLabel: "Bonfire",
     thumbnail: "https://oshohimalayascom.swipepages.media/2026/8/65426ca89707d10018b3de0d/for-website-home-page.webp",
     videoSrc: "/bonfire.mp4",
+    videoType: "local",
   },
   {
     id: "people",
@@ -92,13 +103,47 @@ export const REEL_ITEMS: ReelItem[] = [
     buttonLabel: "People",
     thumbnail: "https://oshohimalayascom.swipepages.media/2026/8/65426ca89707d10018b3de0d/4-2.webp",
     videoSrc: "/people.mp4",
+    videoType: "local",
+  },
+  // FOUR NEW VIDEOS ADDED:
+  {
+    id: "full-moon-night",
+    title: "Full moon night",
+    buttonLabel: "Full moon night",
+    thumbnail: "https://oshohimalayascom.swipepages.media/2026/8/65426ca89707d10018b3de0d/for-website-home-page.webp",
+    videoType: "instagram",
+    instagramUrl: "https://www.instagram.com/reels/DX4FAYcP5Q-/",
+  },
+  {
+    id: "silence",
+    title: "Silence",
+    buttonLabel: "Silence",
+    thumbnail: "https://oshohimalayascom.swipepages.media/2026/8/65426ca89707d10018b3de0d/week-in-silence-150.webp",
+    videoType: "instagram",
+    instagramUrl: "https://www.instagram.com/p/DdY5E3iiUQd/",
+  },
+  {
+    id: "sufi-whirling",
+    title: "Sufi whirling",
+    buttonLabel: "Sufi whirling",
+    thumbnail: "https://oshohimalayascom.swipepages.media/2026/10/65426ca89707d10018b3de0d/osho-heart-festival--9--500.webp",
+    videoType: "instagram",
+    instagramUrl: "https://www.instagram.com/p/DclXF-LvpJm/",
+  },
+  {
+    id: "sound-healing",
+    title: "Sound healing",
+    buttonLabel: "Sound healing",
+    thumbnail: "https://oshohimalayascom.swipepages.media/2026/8/65426ca89707d10018b3de0d/omg-experience-500.webp",
+    videoType: "instagram",
+    instagramUrl: "https://www.instagram.com/reels/Db0dUy7vNAY/",
   },
 ];
 
 // -----------------------------------------------------------------------------
-// SECTION 3: ELEAT-STYLE PHOTO CAROUSEL
+// SECTION 3: PHOTO CAROUSEL (ROW 1 & ROW 2 DIFFERENT IMAGES)
 // -----------------------------------------------------------------------------
-export const GALLERY_PHOTOS: string[] = [
+export const GALLERY_PHOTOS_ROW_1: string[] = [
   "https://oshohimalayascom.swipepages.media/2026/8/65426ca89707d10018b3de0d/1-1.webp",
   "https://oshohimalayascom.swipepages.media/2026/8/65426ca89707d10018b3de0d/2-1.webp",
   "https://oshohimalayascom.swipepages.media/2026/8/65426ca89707d10018b3de0d/3-1.webp",
@@ -111,6 +156,9 @@ export const GALLERY_PHOTOS: string[] = [
   "https://oshohimalayascom.swipepages.media/2026/8/65426ca89707d10018b3de0d/10-1.webp",
   "https://oshohimalayascom.swipepages.media/2026/8/65426ca89707d10018b3de0d/11-1.webp",
   "https://oshohimalayascom.swipepages.media/2026/8/65426ca89707d10018b3de0d/12-1.webp",
+];
+
+export const GALLERY_PHOTOS_ROW_2: string[] = [
   "https://oshohimalayascom.swipepages.media/2026/8/65426ca89707d10018b3de0d/13-2.webp",
   "https://oshohimalayascom.swipepages.media/2026/8/65426ca89707d10018b3de0d/14-2.webp",
   "https://oshohimalayascom.swipepages.media/2026/8/65426ca89707d10018b3de0d/15-1.webp",
@@ -125,17 +173,18 @@ export const GALLERY_PHOTOS: string[] = [
   "https://oshohimalayascom.swipepages.media/2025/9/65426ca89707d10018b3de0d/8.jpg",
 ];
 
+export const GALLERY_PHOTOS: string[] = [
+  ...GALLERY_PHOTOS_ROW_1,
+  ...GALLERY_PHOTOS_ROW_2,
+];
+
 // -----------------------------------------------------------------------------
-// SECTION 4: ELEAT-STYLE SCHEDULE CARDS
+// SECTION 4: COURSES & RETREATS SCHEDULE
+// Updated per instructions:
+// - Removed the first course (Shiva Shakti) since it is over
+// - Added all new courses after March from https://wellness.oshohimalayas.com/lp
 // -----------------------------------------------------------------------------
 export const SCHEDULE_COURSES: ScheduleCourse[] = [
-  {
-    id: "shiva-shakti",
-    title: "Shiva Shakti Retreat",
-    dates: "Oct 29 - Nov 02",
-    tagline: "A colourful self-inquiry to discover the real you.",
-    image: "https://oshohimalayascom.swipepages.media/2026/8/65426ca89707d10018b3de0d/shiva-sakthi-500.webp",
-  },
   {
     id: "festival-of-lights",
     title: "Festival of Lights",
@@ -144,7 +193,7 @@ export const SCHEDULE_COURSES: ScheduleCourse[] = [
     image: "https://oshohimalayascom.swipepages.media/2026/8/65426ca89707d10018b3de0d/festival-of-lights-500.webp",
   },
   {
-    id: "chakra-experience",
+    id: "chakra-experience-nov",
     title: "The Chakra Experience",
     dates: "Nov 12 - 16",
     tagline: "An in-depth course to explore our seven energy centers through meditation.",
@@ -158,7 +207,7 @@ export const SCHEDULE_COURSES: ScheduleCourse[] = [
     image: "https://oshohimalayascom.swipepages.media/2026/9/65426ca89707d10018b3de0d/osho-heart-festival--2--500.webp",
   },
   {
-    id: "vigyan-bhairav",
+    id: "vigyan-bhairav-dec",
     title: "Vigyan Bhairav Tantra",
     dates: "Dec 03 - 07",
     tagline: "Explore the depths of meditation.",
@@ -193,7 +242,7 @@ export const SCHEDULE_COURSES: ScheduleCourse[] = [
     image: "https://oshohimalayascom.swipepages.media/2026/8/65426ca89707d10018b3de0d/29-2-300.webp",
   },
   {
-    id: "heart-sutra",
+    id: "heart-sutra-jan",
     title: "The Heart Sutra",
     dates: "Jan 22 - 26",
     tagline: "Open Your Heart, Embrace Love: A Journey to Joy.",
@@ -201,7 +250,7 @@ export const SCHEDULE_COURSES: ScheduleCourse[] = [
   },
   {
     id: "bodymind",
-    title: "OSHO Talking To Your BodyMind",
+    title: "OSHO Talking To Your BodyMind Course & Training",
     dates: "Jan 26 - Feb 03",
     tagline: "Gain harmony in your body-mind.",
     image: "https://oshohimalayascom.swipepages.media/2026/8/65426ca89707d10018b3de0d/5-3-300.webp",
@@ -222,15 +271,79 @@ export const SCHEDULE_COURSES: ScheduleCourse[] = [
   },
   {
     id: "active-meditation-training",
-    title: "OSHO Active Meditation Training",
+    title: "OSHO Active Meditation: In-Depth & Facilitator Training",
     dates: "Mar 06 - 11",
     tagline: "Get the most out of your meditation by knowing the science behind it.",
     image: "https://oshohimalayascom.swipepages.media/2026/10/65426ca89707d10018b3de0d/rama---all-course-posters--1--500.webp",
   },
+  // NEW COURSES AFTER MARCH:
+  {
+    id: "chakra-experience-mar",
+    title: "The Chakra Experience",
+    dates: "Mar 12 - 16",
+    tagline: "An in-depth course to explore our seven energy centers through meditation.",
+    image: "https://oshohimalayascom.swipepages.media/2026/8/65426ca89707d10018b3de0d/the-chakra-experience-500.webp",
+  },
+  {
+    id: "colours-of-life",
+    title: "Colours Of Life Festival",
+    dates: "Mar 19 - 23",
+    tagline: "Laugh your way to meditation & self-love.",
+    image: "https://oshohimalayascom.swipepages.media/2026/10/65426ca89707d10018b3de0d/osho-heart-festival--9--500.webp",
+  },
+  {
+    id: "in-tune-with-nature",
+    title: "In Tune With Nature",
+    dates: "Apr 01 - 05",
+    tagline: "Relax and refresh in nature.",
+    image: "https://oshohimalayascom.swipepages.media/2026/8/65426ca89707d10018b3de0d/transomatic-dialogue-for-self-healing-training-level-1-ufdmlq-500.webp",
+  },
+  {
+    id: "osho-no-mind",
+    title: "OSHO No Mind",
+    dates: "Apr 10 - 18",
+    tagline: "A 7-day course to declutter mind & experience deep silence.",
+    image: "https://oshohimalayascom.swipepages.media/2026/3/65426ca89707d10018b3de0d/osho-heart-festival--20--500.webp",
+  },
+  {
+    id: "inner-child-healing",
+    title: "Inner Child Healing",
+    dates: "Apr 22 - 26",
+    tagline: "Understand the process deeper and gain the opportunity to learn self-healing skills.",
+    image: "https://oshohimalayascom.swipepages.media/2026/10/65426ca89707d10018b3de0d/whatsapp-image-2026-10-27-at-2-28-42-pm-500.webp",
+  },
+  {
+    id: "heart-sutra-apr",
+    title: "Heart Sutra",
+    dates: "Apr 29 - May 03",
+    tagline: "A 3-day course to discover the mysteries of the heart.",
+    image: "https://oshohimalayascom.swipepages.media/2026/3/65426ca89707d10018b3de0d/osho-heart-festival--23--500.webp",
+  },
+  {
+    id: "emotional-wellness",
+    title: "Emotional Wellness Retreat",
+    dates: "May 06 - 10",
+    tagline: "Master your emotions. Turn negative emotions into positive ones and experience peace.",
+    image: "https://oshohimalayascom.swipepages.media/2026/8/65426ca89707d10018b3de0d/omg-experience-500.webp",
+  },
+  {
+    id: "chakra-experience-may",
+    title: "The Chakra Experience",
+    dates: "May 19 - 24",
+    tagline: "An in-depth course to explore our seven energy centers through meditation.",
+    image: "https://oshohimalayascom.swipepages.media/2026/8/65426ca89707d10018b3de0d/the-chakra-experience-500.webp",
+  },
+  {
+    id: "vigyan-bhairav-may",
+    title: "Vigyan Bhairav Tantra",
+    dates: "May 27 - 31",
+    tagline: "Explore the depths of meditation.",
+    image: "https://oshohimalayascom.swipepages.media/2026/8/65426ca89707d10018b3de0d/vigyan-bhairav-tantra-500.webp",
+  },
 ];
 
 // -----------------------------------------------------------------------------
-// SECTION 5: VIDEO TESTIMONIALS (DUPLICATES SECTION 2 FORMAT)
+// SECTION 5: VIDEO TESTIMONIALS
 // -----------------------------------------------------------------------------
 export const TESTIMONIAL_REVIEWS: TestimonialReview[] = [
   {
@@ -356,5 +469,5 @@ export const VIRTUAL_TOUR_INFO = {
   kicker: "360° Experience",
   title: "Virtual Campus Tour",
   subtitle: "Click & swipe to move around 360 degrees! Use the icons on the sidebar too.",
-  matterportUrl: "https://my.matterport.com/show/?m=ZU3PmRumZQr",
+  matterportUrl: "https://my.matterport.com/show/?m=ZU3PmRumZQr&play=1&brand=0",
 };

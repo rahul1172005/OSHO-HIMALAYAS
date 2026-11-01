@@ -1,89 +1,37 @@
 "use client";
 
-import { useEffect, useState } from "react";
-
 export default function Hero() {
-  const [isMobile, setIsMobile] = useState(false);
-  const [mobileTextReady, setMobileTextReady] = useState(false);
-
-  useEffect(() => {
-    const checkMobile = () => {
-      setIsMobile(window.innerWidth <= 768);
-    };
-    checkMobile();
-    window.addEventListener("resize", checkMobile);
-
-    // Mobile text appears after 6 seconds delay because video has intro text
-    const timer = setTimeout(() => {
-      setMobileTextReady(true);
-    }, 6000);
-
-    return () => {
-      window.removeEventListener("resize", checkMobile);
-      clearTimeout(timer);
-    };
-  }, []);
-
   return (
     <section className="hero-section" id="hero">
-      {/* BACKGROUND VIDEO (DESKTOP & MOBILE VERSIONS) */}
-      <div className="hero-video-container" aria-hidden="true">
-        {/* Desktop Video */}
-        <video
-          autoPlay
-          loop
-          muted
-          playsInline
-          preload="auto"
-          className="hero-video-element hero-video-desktop"
-        >
-          <source src="/Website-video-2026-desktop-version.mp4" type="video/mp4" />
-        </video>
+      {/* RESPONSIVE HERO IMAGES (DESKTOP & MOBILE VERSIONS) */}
+      <div className="hero-image-container" aria-hidden="true">
+        {/* Desktop Landscape Photo */}
+        <img
+          src="/desktop-hero.jpg"
+          alt="OSHO Himalayas Meditation Resort Dharamshala"
+          className="hero-image-element hero-image-desktop"
+        />
 
-        {/* Mobile Video */}
-        <video
-          autoPlay
-          loop
-          muted
-          playsInline
-          preload="auto"
-          className="hero-video-element hero-video-mobile"
-        >
-          <source src="/New-website-mobile-version-home-page-lead-video_Edited (1).mp4" type="video/mp4" />
-        </video>
+        {/* Mobile Vertical Frame Photo */}
+        <img
+          src="/mobile-hero.jpg"
+          alt="OSHO Himalayas Meditators in the Himalayan Valley"
+          className="hero-image-element hero-image-mobile"
+        />
 
-        {/* Soft atmospheric gradient overlay */}
-        <div className="hero-video-overlay" />
+        {/* Soft atmospheric gradient overlay for clean contrast and legibility */}
+        <div className="hero-image-overlay" />
       </div>
 
-      {/* LEAD SECTION CONTENT */}
+      {/* LEAD SECTION CONTENT: ONLY THE TWO SPECIFIED LINES */}
       <div className="container hero-content-wrap">
-        <div
-          className={`hero-content ${
-            isMobile ? (mobileTextReady ? "mobile-revealed" : "mobile-delayed") : "desktop-revealed"
-          }`}
-        >
-          {/* Brand Name Styled in Poppins: OSHO (Golden) Himalayas (Blue) */}
-          <div className="hero-brand" aria-label="OSHO Himalayas">
-            <span className="hero-brand-osho">OSHO</span>
-            <span className="hero-brand-himalayas">Himalayas</span>
-          </div>
-
-          {/* Headline & Taglines */}
-          <h1 className="hero-headline">You deserve a break</h1>
-
-          <p className="hero-subheadline">
-            It&apos;s time for meditative holidays in the Himalayas
+        <div className="hero-content">
+          <h1 className="hero-headline">
+            A meditation resort for the modern man &amp; woman like you.
+          </h1>
+          <p className="hero-location-text">
+            Dharamshala, India
           </p>
-
-          <p className="hero-location-text">Dharamshala, Himachal</p>
-
-          {/* CTA Button */}
-          <div className="hero-actions">
-            <a href="#contact-us" className="btn btn-hero-cta">
-              Get in touch
-            </a>
-          </div>
         </div>
       </div>
     </section>

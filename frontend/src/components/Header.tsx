@@ -3,14 +3,12 @@
 import { useState, useEffect } from "react";
 
 export default function Header() {
-  const [visible, setVisible] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
   const [navOpen, setNavOpen] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
-      // Appear only after scrolling down the first (lead) section
-      const threshold = window.innerHeight * 0.7;
-      setVisible(window.scrollY > threshold);
+      setScrolled(window.scrollY > 40);
     };
 
     window.addEventListener("scroll", handleScroll, { passive: true });
@@ -19,11 +17,14 @@ export default function Header() {
   }, []);
 
   return (
-    <header className={`site-header ${visible ? "visible" : "hidden-on-hero"}`}>
+    <header className={`site-header ${scrolled ? "scrolled" : "transparent-at-top"}`}>
       <div className="container nav-container">
         <a href="#hero" className="brand-logo" aria-label="OSHO Himalayas Home">
-          <span className="brand-osho">OSHO</span>
-          <span className="brand-himalayas">Himalayas</span>
+          <img
+            src="/osho-logo.png"
+            alt="OSHO Himalayas Wellness Resort"
+            className="site-logo-img"
+          />
         </a>
 
         <nav aria-label="Primary Navigation">
@@ -87,9 +88,9 @@ export default function Header() {
                 </>
               ) : (
                 <>
-                  <line x1="3" y1="6" x2="21" y2="6"></line>
+                  <line x1="3" y1="21" x2="21" y2="21"></line>
                   <line x1="3" y1="12" x2="21" y2="12"></line>
-                  <line x1="3" y1="18" x2="21" y2="18"></line>
+                  <line x1="3" y1="3" x2="21" y2="3"></line>
                 </>
               )}
             </svg>
