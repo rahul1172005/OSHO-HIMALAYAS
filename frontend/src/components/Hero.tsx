@@ -33,7 +33,7 @@ export default function Hero({
   x = "0px",
   y = "0px",
   desktopX = "0px",
-  desktopY = "0px",
+  desktopY = "-10px",
   mobileX = "0px",
   mobileY = "0px",
 }: HeroProps) {
