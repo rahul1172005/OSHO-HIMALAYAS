@@ -1,21 +1,101 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { GALLERY_PHOTOS_ROW_1, GALLERY_PHOTOS_ROW_2 } from "@/lib/landingData";
 
 export default function PhotoCarousel() {
   const [selectedPhoto, setSelectedPhoto] = useState<string | null>(null);
-  const [direction, setDirection] = useState<"normal" | "reverse">("normal");
   const [isPaused, setIsPaused] = useState(false);
+
+  const row1Ref = useRef<HTMLDivElement>(null);
+  const row2Ref = useRef<HTMLDivElement>(null);
+  const isInteracting = useRef(false);
+  const resumeTimer = useRef<NodeJS.Timeout | null>(null);
+
+  const scrollLeft = () => {
+    if (row1Ref.current) {
+      row1Ref.current.scrollBy({ left: -320, behavior: "smooth" });
+    }
+    if (row2Ref.current) {
+      row2Ref.current.scrollBy({ left: -320, behavior: "smooth" });
+    }
+  };
+
+  const scrollRight = () => {
+    if (row1Ref.current) {
+      row1Ref.current.scrollBy({ left: 320, behavior: "smooth" });
+    }
+    if (row2Ref.current) {
+      row2Ref.current.scrollBy({ left: 320, behavior: "smooth" });
+    }
+  };
 
   const togglePause = () => {
     setIsPaused((prev) => !prev);
   };
 
-  const handleDirection = (dir: "normal" | "reverse") => {
-    setDirection(dir);
-    setIsPaused(false);
+  const handleTouchStart = () => {
+    isInteracting.current = true;
+    if (resumeTimer.current) clearTimeout(resumeTimer.current);
   };
+
+  const handleTouchEnd = () => {
+    if (resumeTimer.current) clearTimeout(resumeTimer.current);
+    resumeTimer.current = setTimeout(() => {
+      isInteracting.current = false;
+    }, 2000);
+  };
+
+  const handleWheel = () => {
+    isInteracting.current = true;
+    if (resumeTimer.current) clearTimeout(resumeTimer.current);
+    resumeTimer.current = setTimeout(() => {
+      isInteracting.current = false;
+    }, 2000);
+  };
+
+  // Continuous smooth auto-scroll drift with seamless loop wrap-around
+  useEffect(() => {
+    let animId: number;
+    let lastTime = performance.now();
+
+    const loop = (currentTime: number) => {
+      const dt = currentTime - lastTime;
+      lastTime = currentTime;
+
+      const r1 = row1Ref.current;
+      const r2 = row2Ref.current;
+
+      if (!isPaused && !isInteracting.current) {
+        const speed = 25; // px per second
+        const move = (speed * dt) / 1000;
+
+        if (r1) {
+          r1.scrollLeft += move;
+          const half1 = r1.scrollWidth / 2;
+          if (half1 > 0 && r1.scrollLeft >= half1) {
+            r1.scrollLeft -= half1;
+          }
+        }
+
+        if (r2) {
+          r2.scrollLeft += move;
+          const half2 = r2.scrollWidth / 2;
+          if (half2 > 0 && r2.scrollLeft >= half2) {
+            r2.scrollLeft -= half2;
+          }
+        }
+      }
+
+      animId = requestAnimationFrame(loop);
+    };
+
+    animId = requestAnimationFrame(loop);
+    return () => {
+      cancelAnimationFrame(animId);
+      if (resumeTimer.current) clearTimeout(resumeTimer.current);
+    };
+  }, [isPaused]);
 
   const renderPhotoCard = (photoUrl: string, key: string, label: string) => (
     <div
@@ -40,7 +120,7 @@ export default function PhotoCarousel() {
             viewBox="0 0 24 24"
             fill="none"
             stroke="currentColor"
-            strokeWidth="2"
+            strokeWidth="2.2"
             strokeLinecap="round"
             strokeLinejoin="round"
           >
@@ -67,13 +147,13 @@ export default function PhotoCarousel() {
           </p>
         </div>
 
-        {/* PROPERLY DESIGNED & ALIGNED ARROW BUTTONS */}
+        {/* FUNCTIONAL ARROW BUTTONS THAT ACTUALLY MOVE THE CARDS */}
         <div className="photo-nav-arrows">
           <button
             type="button"
-            onClick={() => handleDirection("reverse")}
-            className={`carousel-arrow-btn ${direction === "reverse" && !isPaused ? "active-arrow" : ""}`}
-            aria-label="Scroll gallery left"
+            onClick={scrollLeft}
+            className="carousel-arrow-btn"
+            aria-label="Move photos left"
             title="Move left"
           >
             <svg
@@ -123,9 +203,9 @@ export default function PhotoCarousel() {
           </button>
           <button
             type="button"
-            onClick={() => handleDirection("normal")}
-            className={`carousel-arrow-btn ${direction === "normal" && !isPaused ? "active-arrow" : ""}`}
-            aria-label="Scroll gallery right"
+            onClick={scrollRight}
+            className="carousel-arrow-btn"
+            aria-label="Move photos right"
             title="Move right"
           >
             <svg
@@ -146,42 +226,52 @@ export default function PhotoCarousel() {
         </div>
       </div>
 
-      {/* TWO DISTINCT MARQUEE ROWS WITH PURE SANCTUARY PHOTOS */}
+      {/* TWO SCROLLABLE & SWIPEABLE PHOTO TRACKS WITH SEAMLESS AUTO-SCROLL LOOP */}
       <div className="photo-marquee-wrapper">
-        {/* ROW 1: First 12 Unique Photos */}
+        {/* ROW 1 */}
         <div
-          className={`photo-marquee-row photo-marquee-row-1 ${isPaused ? "is-paused" : ""} ${
-            direction === "reverse" ? "is-reverse" : "is-normal"
-          }`}
+          className="photo-marquee-row"
+          ref={row1Ref}
+          onTouchStart={handleTouchStart}
+          onTouchEnd={handleTouchEnd}
+          onTouchCancel={handleTouchEnd}
+          onWheel={handleWheel}
+          onMouseEnter={() => {
+            isInteracting.current = true;
+          }}
+          onMouseLeave={() => {
+            isInteracting.current = false;
+          }}
         >
-          <div className="photo-marquee-group">
-            {GALLERY_PHOTOS_ROW_1.map((url, i) =>
-              renderPhotoCard(url, `r1-a-${i}`, `Row 1 Photo ${i + 1}`)
-            )}
-          </div>
-          <div className="photo-marquee-group" aria-hidden="true">
-            {GALLERY_PHOTOS_ROW_1.map((url, i) =>
-              renderPhotoCard(url, `r1-b-${i}`, `Row 1 Photo ${i + 1}`)
-            )}
-          </div>
+          {GALLERY_PHOTOS_ROW_1.map((url, i) =>
+            renderPhotoCard(url, `r1-a-${i}`, `Row 1 Photo ${i + 1}`)
+          )}
+          {GALLERY_PHOTOS_ROW_1.map((url, i) =>
+            renderPhotoCard(url, `r1-b-${i}`, `Row 1 Photo ${i + 1} clone`)
+          )}
         </div>
 
-        {/* ROW 2: 12 Completely Different Unique Photos */}
+        {/* ROW 2 */}
         <div
-          className={`photo-marquee-row photo-marquee-row-2 ${isPaused ? "is-paused" : ""} ${
-            direction === "reverse" ? "is-reverse" : "is-normal"
-          }`}
+          className="photo-marquee-row"
+          ref={row2Ref}
+          onTouchStart={handleTouchStart}
+          onTouchEnd={handleTouchEnd}
+          onTouchCancel={handleTouchEnd}
+          onWheel={handleWheel}
+          onMouseEnter={() => {
+            isInteracting.current = true;
+          }}
+          onMouseLeave={() => {
+            isInteracting.current = false;
+          }}
         >
-          <div className="photo-marquee-group">
-            {GALLERY_PHOTOS_ROW_2.map((url, i) =>
-              renderPhotoCard(url, `r2-a-${i}`, `Row 2 Photo ${i + 1}`)
-            )}
-          </div>
-          <div className="photo-marquee-group" aria-hidden="true">
-            {GALLERY_PHOTOS_ROW_2.map((url, i) =>
-              renderPhotoCard(url, `r2-b-${i}`, `Row 2 Photo ${i + 1}`)
-            )}
-          </div>
+          {GALLERY_PHOTOS_ROW_2.map((url, i) =>
+            renderPhotoCard(url, `r2-a-${i}`, `Row 2 Photo ${i + 1}`)
+          )}
+          {GALLERY_PHOTOS_ROW_2.map((url, i) =>
+            renderPhotoCard(url, `r2-b-${i}`, `Row 2 Photo ${i + 1} clone`)
+          )}
         </div>
       </div>
 

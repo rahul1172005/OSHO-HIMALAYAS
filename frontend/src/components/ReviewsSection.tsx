@@ -252,15 +252,6 @@ export default function ReviewsSection() {
             </div>
           )}
 
-          {/* Quote & Author Info Overlay */}
-          <div className="testimonial-card-meta">
-            <p className="testimonial-quote">&ldquo;{rev.quote}&rdquo;</p>
-            <div className="testimonial-author">
-              <span className="author-name">{rev.name}</span>
-              <span className="author-loc">{rev.location}</span>
-            </div>
-          </div>
-
           {/* Play / Action Pill */}
           <div className={`reel-card-pill ${isPlaying ? "playing" : ""}`}>
             <span className="reel-play-icon" aria-hidden="true">
@@ -276,7 +267,7 @@ export default function ReviewsSection() {
               )}
             </span>
             <span className="reel-pill-label">
-              {isPlaying ? `Pause: ${rev.name}` : rev.name}
+              {isPlaying ? (isMuted ? "Playing (muted)" : "Playing with sound") : `${rev.name} (${rev.location})`}
             </span>
           </div>
         </div>
