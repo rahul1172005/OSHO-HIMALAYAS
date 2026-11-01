@@ -350,9 +350,10 @@ export default function ReviewsSection() {
             <span className="rating-text">4.8 stars out of 1,000+ Google reviews</span>
           </div>
         </div>
+      </div>
 
-        {/* FULLY SCROLLABLE & SWIPEABLE TESTIMONIALS TRACK WITH SEAMLESS AUTO-SCROLL LOOP */}
-        <div className="reel-carousel-wrapper">
+      {/* FULLY SCROLLABLE & SWIPEABLE TESTIMONIALS TRACK (FULL BLEED TO EDGES) */}
+      <div className="reel-carousel-wrapper">
           <div
             className="reel-cards-track"
             ref={trackRef}
@@ -442,7 +443,6 @@ export default function ReviewsSection() {
             </button>
           </div>
         </div>
-      </div>
-    </section>
+      </section>
   );
 }

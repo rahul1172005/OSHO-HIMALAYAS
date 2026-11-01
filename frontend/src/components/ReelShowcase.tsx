@@ -23,7 +23,7 @@ export default function ReelShowcase() {
       if (el) {
         try {
           el.pause();
-        } catch (_) {}
+        } catch (_) { }
       }
     });
     setPlayingId(null);
@@ -331,8 +331,8 @@ export default function ReelShowcase() {
                 ? isBuffering
                   ? "Loading..."
                   : isMuted
-                  ? "Playing (muted)"
-                  : "Playing with sound"
+                    ? "Playing (muted)"
+                    : "Playing with sound"
                 : item.buttonLabel}
             </span>
           </div>
@@ -358,9 +358,10 @@ export default function ReelShowcase() {
             *These videos play with audio, with the option to mute.
           </p>
         </div>
+      </div>
 
-        {/* FULLY SCROLLABLE & SWIPEABLE REELS TRACK WITH SEAMLESS AUTO-SCROLL LOOP */}
-        <div className="reel-carousel-wrapper">
+      {/* FULLY SCROLLABLE & SWIPEABLE REELS TRACK (FULL BLEED TO EDGES) */}
+      <div className="reel-carousel-wrapper">
           <div
             className="reel-cards-track"
             ref={trackRef}
@@ -448,9 +449,8 @@ export default function ReelShowcase() {
             </button>
           </div>
         </div>
-      </div>
 
-      {/* POP-UP MODAL FOR INSTAGRAM REELS (IN INSTAGRAM REEL DIMENSIONS) */}
+        {/* POP-UP MODAL FOR INSTAGRAM REELS (IN INSTAGRAM REEL DIMENSIONS) */}
       {activeModalReel && (
         <div
           className="reel-modal-backdrop"

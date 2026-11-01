@@ -61,7 +61,7 @@ export default function ScheduleSection({ onSelectCourse }: ScheduleSectionProps
 
   return (
     <section className="section-schedule" id="schedule">
-      <div className="container schedule-layout">
+      <div className="schedule-layout">
         {/* LEFT COLUMN: TITLE & NAVIGATION (ELEAT CEREAL DESIGN) */}
         <div className="schedule-info-col">
           <div className="schedule-header-badge">Open all year</div>

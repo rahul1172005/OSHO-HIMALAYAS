@@ -445,6 +445,7 @@ video {
 .section-reel-showcase {
   padding: 54px 0 46px;
   background-color: var(--color-bg-page);
+  overflow: hidden;
 }
 
 .reel-header {
@@ -481,6 +482,7 @@ video {
 .reel-carousel-wrapper {
   position: relative;
   width: 100%;
+  overflow: hidden;
   padding: 6px 0 16px;
 }
 
@@ -1039,6 +1041,7 @@ video {
 .section-schedule {
   padding: 54px 0 46px;
   background: var(--color-bg-page);
+  overflow: hidden;
 }
 
 .schedule-layout {
@@ -1046,10 +1049,17 @@ video {
   grid-template-columns: 320px 1fr;
   gap: 40px;
   align-items: flex-start;
+  width: 100%;
+  max-width: 100%;
+  padding-left: max(24px, calc((100vw - var(--container-width)) / 2 + 24px));
+  padding-right: 0;
+  margin-left: 0;
+  margin-right: 0;
 }
 
 .schedule-info-col {
   padding-right: 12px;
+  flex-shrink: 0;
 }
 
 .schedule-header-badge {
@@ -1141,6 +1151,7 @@ video {
   overflow-x: auto;
   scroll-behavior: smooth;
   padding-bottom: 16px;
+  padding-right: max(24px, calc((100vw - var(--container-width)) / 2 + 24px));
   scrollbar-width: none;
   -webkit-overflow-scrolling: touch;
 }
@@ -1740,6 +1751,15 @@ video {
   .schedule-layout {
     grid-template-columns: 1fr;
     gap: 28px;
+    padding-left: 24px;
+    padding-right: 24px;
+    max-width: var(--container-width);
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .schedule-cards-track {
+    padding-right: 24px;
   }
 
   .schedule-info-col {
@@ -1882,6 +1902,15 @@ video {
   }
 
   /* Schedule section */
+  .schedule-layout {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+
+  .schedule-cards-track {
+    padding-right: 16px;
+  }
+
   .schedule-main-title {
     font-size: 2rem;
   }
