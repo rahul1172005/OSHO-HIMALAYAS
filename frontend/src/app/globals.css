@@ -259,16 +259,16 @@ video {
 }
 
 .site-header.transparent-at-top .nav-link {
-  color: #ffffff;
-  text-shadow: 0 1px 4px rgba(24, 34, 61, 0.45);
+  color: var(--color-black);
+  text-shadow: none;
 }
 
 .site-header.transparent-at-top .nav-link:hover {
-  color: var(--color-gold);
+  color: var(--color-blue);
 }
 
 .site-header.transparent-at-top .nav-toggle-btn {
-  color: #ffffff;
+  color: var(--color-black);
 }
 
 .site-header.scrolled {
@@ -359,17 +359,18 @@ video {
 }
 
 /* ==========================================================================
-   SECTION 1: HERO SECTION (RESPONSIVE DESKTOP & MOBILE IMAGES)
+   SECTION 1: HERO SECTION (RESPONSIVE DESKTOP & MOBILE IMAGES - NO FILTER)
    ========================================================================== */
 .hero-section {
   position: relative;
   width: 100%;
   min-height: 100vh;
   display: flex;
+  flex-direction: column;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
   overflow: hidden;
-  background-color: var(--color-black);
+  background-color: var(--color-bg-page);
 }
 
 .hero-image-container {
@@ -389,6 +390,7 @@ video {
   position: absolute;
   top: 0;
   left: 0;
+  filter: none !important;
 }
 
 .hero-image-desktop {
@@ -402,54 +404,34 @@ video {
 }
 
 .hero-image-overlay {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(180deg,
-      rgba(24, 34, 61, 0.35) 0%,
-      rgba(24, 34, 61, 0.15) 40%,
-      rgba(24, 34, 61, 0.6) 100%);
-  z-index: 2;
-  pointer-events: none;
+  display: none !important;
 }
 
 .hero-content-wrap {
   position: relative;
   z-index: 10;
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: center;
   text-align: center;
-  padding-top: 40px;
-  padding-bottom: 40px;
+  padding-top: clamp(140px, 20vh, 185px);
+  width: 100%;
 }
 
 .hero-content {
-  max-width: 860px;
-  color: var(--color-white);
+  max-width: 960px;
 }
 
 .hero-headline {
   font-family: var(--font-headline);
-  font-size: clamp(2.1rem, 4.2vw, 3.4rem);
-  font-weight: 400;
-  color: var(--color-white);
-  line-height: 1.2;
-  margin-bottom: 16px;
-  text-shadow: 0 2px 14px rgba(24, 34, 61, 0.6);
+  font-size: clamp(1.35rem, 2.25vw, 2.1rem);
+  font-weight: 600;
+  color: #18223d;
+  line-height: 1.35;
   letter-spacing: -0.01em;
-}
-
-.hero-location-text {
-  font-family: var(--font-headline);
-  font-size: 1.1rem;
-  font-weight: 300;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.92);
-  text-shadow: 0 1px 8px rgba(24, 34, 61, 0.5);
+  margin: 0 auto;
+  text-shadow: none;
+  white-space: nowrap;
 }
 
 /* ==========================================================================
@@ -1830,13 +1812,20 @@ video {
     display: none;
   }
 
-  /* Hero on mobile */
-  .hero-headline {
-    font-size: 2.15rem;
+  /* Hero on mobile: positioned in open sky area in 2 clean lines */
+  .hero-content-wrap {
+    padding-top: clamp(160px, 24vh, 215px);
   }
 
-  .hero-location-text {
-    font-size: 0.95rem;
+  .hero-headline {
+    font-size: 1.45rem;
+    font-weight: 600;
+    color: #18223d;
+    white-space: normal;
+    max-width: 320px;
+    line-height: 1.35;
+    margin: 0 auto;
+    letter-spacing: -0.01em;
   }
 
   /* Reel cards */
