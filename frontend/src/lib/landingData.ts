@@ -105,38 +105,38 @@ export const REEL_ITEMS: ReelItem[] = [
     videoSrc: "/people.mp4",
     videoType: "local",
   },
-  // FOUR NEW VIDEOS ADDED:
+  // FOUR NEW VIDEOS (LOCAL MP4 VIDEOS):
   {
     id: "full-moon-night",
     title: "Full moon night",
     buttonLabel: "Full moon night",
     thumbnail: "https://oshohimalayascom.swipepages.media/2026/8/65426ca89707d10018b3de0d/for-website-home-page.webp",
-    videoType: "instagram",
-    instagramUrl: "https://www.instagram.com/reels/DX4FAYcP5Q-/",
+    videoSrc: "/full-moon-night.mp4",
+    videoType: "local",
   },
   {
     id: "silence",
     title: "Silence",
     buttonLabel: "Silence",
     thumbnail: "https://oshohimalayascom.swipepages.media/2026/8/65426ca89707d10018b3de0d/week-in-silence-150.webp",
-    videoType: "instagram",
-    instagramUrl: "https://www.instagram.com/p/DdY5E3iiUQd/",
+    videoSrc: "/silence.mp4",
+    videoType: "local",
   },
   {
     id: "sufi-whirling",
     title: "Sufi whirling",
     buttonLabel: "Sufi whirling",
     thumbnail: "https://oshohimalayascom.swipepages.media/2026/10/65426ca89707d10018b3de0d/osho-heart-festival--9--500.webp",
-    videoType: "instagram",
-    instagramUrl: "https://www.instagram.com/p/DclXF-LvpJm/",
+    videoSrc: "/sufi-whirling.mp4",
+    videoType: "local",
   },
   {
     id: "sound-healing",
     title: "Sound healing",
     buttonLabel: "Sound healing",
     thumbnail: "https://oshohimalayascom.swipepages.media/2026/8/65426ca89707d10018b3de0d/omg-experience-500.webp",
-    videoType: "instagram",
-    instagramUrl: "https://www.instagram.com/reels/Db0dUy7vNAY/",
+    videoSrc: "/sound-healing.mp4",
+    videoType: "local",
   },
 ];
 
