@@ -62,8 +62,8 @@ export default function ScheduleSection({ onSelectCourse }: ScheduleSectionProps
       <div className="container schedule-layout">
         {/* LEFT COLUMN: TITLE & NAVIGATION (ELEAT CEREAL DESIGN) */}
         <div className="schedule-info-col">
-          <div className="schedule-header-badge">Our Courses</div>
-          <h2 className="schedule-main-title">Find our courses</h2>
+          <div className="schedule-header-badge">Open all year</div>
+          <h2 className="schedule-main-title">Our Schedule</h2>
           <p className="schedule-main-sub">
             All our courses are based on OSHO Active Meditations.
           </p>
