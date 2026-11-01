@@ -359,47 +359,50 @@ video {
 }
 
 /* ==========================================================================
-   SECTION 1: HERO SECTION (RESPONSIVE DESKTOP & MOBILE IMAGES - NO FILTER)
+   SECTION 1: HERO SECTION (RESPONSIVE DESKTOP & MOBILE IMAGES - FULL NATURAL VIEW)
    ========================================================================== */
 .hero-section {
   position: relative;
   width: 100%;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: flex-start;
+  min-height: unset;
+  height: auto;
+  display: block;
   overflow: hidden;
   background-color: var(--color-bg-page);
 }
 
 .hero-image-container {
-  position: absolute;
-  top: 0;
-  left: 0;
+  position: relative;
+  top: auto;
+  left: auto;
   width: 100%;
-  height: 100%;
+  height: auto;
+  aspect-ratio: 1024 / 768;
   overflow: hidden;
   z-index: 1;
 }
 
 .hero-image-element {
   width: 100%;
-  height: 100%;
-  object-fit: cover;
-  position: absolute;
-  top: 0;
-  left: 0;
+  height: auto;
+  display: block;
   filter: none !important;
 }
 
 .hero-image-desktop {
-  display: block;
+  display: block !important;
+  position: relative;
+  top: auto;
+  left: auto;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 1024 / 768;
+  object-fit: contain;
   object-position: center;
 }
 
 .hero-image-mobile {
-  display: none;
+  display: none !important;
   object-position: center;
 }
 
@@ -408,14 +411,20 @@ video {
 }
 
 .hero-content-wrap {
-  position: relative;
-  z-index: 10;
-  display: flex;
-  align-items: flex-start;
-  justify-content: center;
-  text-align: center;
-  padding-top: clamp(140px, 20vh, 185px);
-  width: 100%;
+  display: none !important;
+}
+
+/* Accessibility utility for screen readers */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
 }
 
 .hero-content {

@@ -69,12 +69,17 @@ export default function Hero({
         />
       </div>
 
-      {/* HERO SECTION WORDING: POSITIONED IN THE UPPER SKY REGION WITH X, Y PARAMETERS */}
+      {/* ACCESSIBLE H1 HEADING FOR SCREEN READERS & SEO */}
+      <h1 className="sr-only">
+        A meditation resort for the modern man &amp; woman like you. Dharamshala, India.
+      </h1>
+
+      {/* HERO SECTION WORDING (VISUALLY HIDDEN - EMBEDDED TYPOGRAPHY IN PHOTO) */}
       <div className="container hero-content-wrap">
         <div className="hero-content">
-          <h1 className="hero-headline">
+          <p className="hero-headline">
             A meditation resort for the modern man &amp; woman like you.
-          </h1>
+          </p>
         </div>
       </div>
     </section>
