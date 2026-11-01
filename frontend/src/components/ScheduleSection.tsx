@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef } from "react";
+import { useState } from "react";
 import { SCHEDULE_COURSES, ScheduleCourse } from "@/lib/landingData";
 
 interface ScheduleSectionProps {
@@ -8,13 +8,16 @@ interface ScheduleSectionProps {
 }
 
 export default function ScheduleSection({ onSelectCourse }: ScheduleSectionProps) {
-  const trackRef = useRef<HTMLDivElement>(null);
+  const [direction, setDirection] = useState<"normal" | "reverse">("normal");
+  const [isPaused, setIsPaused] = useState(false);
 
-  const scroll = (direction: "left" | "right") => {
-    if (trackRef.current) {
-      const scrollAmount = direction === "left" ? -380 : 380;
-      trackRef.current.scrollBy({ left: scrollAmount, behavior: "smooth" });
-    }
+  const togglePause = () => {
+    setIsPaused((prev) => !prev);
+  };
+
+  const handleDirection = (dir: "normal" | "reverse") => {
+    setDirection(dir);
+    setIsPaused(false);
   };
 
   const handleEnquire = (course: ScheduleCourse) => {
@@ -26,6 +29,33 @@ export default function ScheduleSection({ onSelectCourse }: ScheduleSectionProps
       contactElem.scrollIntoView({ behavior: "smooth" });
     }
   };
+
+  const renderCourseCard = (course: ScheduleCourse, key: string) => (
+    <div key={key} className="eleat-course-card">
+      <div className="eleat-card-media-wrap">
+        <img
+          src={course.image}
+          alt={course.title}
+          loading="lazy"
+          className="eleat-card-img"
+        />
+      </div>
+
+      <div className="eleat-card-body">
+        <h3 className="eleat-card-title">{course.title}</h3>
+        <p className="eleat-card-dates">{course.dates}</p>
+        <p className="eleat-card-tagline">{course.tagline}</p>
+
+        <button
+          onClick={() => handleEnquire(course)}
+          className="btn btn-sm btn-course-enquire"
+          aria-label={`Enquire about ${course.title}`}
+        >
+          Enquire for this course &rarr;
+        </button>
+      </div>
+    </div>
+  );
 
   return (
     <section className="section-schedule" id="schedule">
@@ -43,18 +73,18 @@ export default function ScheduleSection({ onSelectCourse }: ScheduleSectionProps
             food, swimming pool, gym, &amp; library).
           </p>
 
-          {/* ARROW CONTROLS */}
+          {/* ARROW & PAUSE CONTROLS */}
           <div className="schedule-arrows">
             <button
               type="button"
-              onClick={() => scroll("left")}
-              className="schedule-arrow-btn"
+              onClick={() => handleDirection("reverse")}
+              className={`schedule-arrow-btn ${direction === "reverse" && !isPaused ? "active-arrow" : ""}`}
               aria-label="Scroll courses left"
-              title="Previous courses"
+              title="Move left"
             >
               <svg
-                width="20"
-                height="20"
+                width="18"
+                height="18"
                 viewBox="0 0 24 24"
                 fill="none"
                 stroke="currentColor"
@@ -69,14 +99,44 @@ export default function ScheduleSection({ onSelectCourse }: ScheduleSectionProps
             </button>
             <button
               type="button"
-              onClick={() => scroll("right")}
-              className="schedule-arrow-btn"
+              onClick={togglePause}
+              className={`schedule-arrow-btn ${isPaused ? "paused-btn" : ""}`}
+              aria-label={isPaused ? "Resume auto-scroll" : "Pause auto-scroll"}
+              title={isPaused ? "Resume auto-scroll" : "Pause auto-scroll"}
+            >
+              {isPaused ? (
+                <svg
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  fill="currentColor"
+                  aria-hidden="true"
+                >
+                  <polygon points="5 3 19 12 5 21 5 3" />
+                </svg>
+              ) : (
+                <svg
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  fill="currentColor"
+                  aria-hidden="true"
+                >
+                  <rect x="6" y="4" width="4" height="16" rx="1" />
+                  <rect x="14" y="4" width="4" height="16" rx="1" />
+                </svg>
+              )}
+            </button>
+            <button
+              type="button"
+              onClick={() => handleDirection("normal")}
+              className={`schedule-arrow-btn ${direction === "normal" && !isPaused ? "active-arrow" : ""}`}
               aria-label="Scroll courses right"
-              title="Next courses"
+              title="Move right"
             >
               <svg
-                width="20"
-                height="20"
+                width="18"
+                height="18"
                 viewBox="0 0 24 24"
                 fill="none"
                 stroke="currentColor"
@@ -92,34 +152,23 @@ export default function ScheduleSection({ onSelectCourse }: ScheduleSectionProps
           </div>
         </div>
 
-        {/* RIGHT COLUMN: HORIZONTAL COURSE CARDS TRACK (EXACT ELEAT CARD STYLE) */}
+        {/* RIGHT COLUMN: INFINITE MARQUEE LIST COURSE CARDS TRACK */}
         <div className="schedule-cards-wrap">
-          <div className="schedule-cards-track" ref={trackRef}>
-            {SCHEDULE_COURSES.map((course) => (
-              <div key={course.id} className="eleat-course-card">
-                <div className="eleat-card-media-wrap">
-                  <img
-                    src={course.image}
-                    alt={course.title}
-                    loading="lazy"
-                    className="eleat-card-img"
-                  />
-                </div>
-
-                <div className="eleat-card-body">
-                  <h3 className="eleat-card-title">{course.title}</h3>
-                  <p className="eleat-card-dates">{course.dates}</p>
-                  <p className="eleat-card-tagline">{course.tagline}</p>
-
-                  <button
-                    onClick={() => handleEnquire(course)}
-                    className="btn btn-sm btn-course-enquire"
-                  >
-                    Enquire for this retreat &rarr;
-                  </button>
-                </div>
-              </div>
-            ))}
+          <div
+            className={`schedule-marquee-row ${isPaused ? "is-paused" : ""} ${
+              direction === "reverse" ? "is-reverse" : "is-normal"
+            }`}
+          >
+            <div className="schedule-marquee-group">
+              {SCHEDULE_COURSES.map((course) =>
+                renderCourseCard(course, `c1-${course.id}`)
+              )}
+            </div>
+            <div className="schedule-marquee-group" aria-hidden="true">
+              {SCHEDULE_COURSES.map((course) =>
+                renderCourseCard(course, `c2-${course.id}`)
+              )}
+            </div>
           </div>
         </div>
       </div>

@@ -473,33 +473,67 @@ video {
   font-weight: 300;
 }
 
-.reel-carousel-wrapper {
+.reel-marquee-wrapper {
   position: relative;
   width: 100%;
+  overflow: hidden;
+  padding: 6px 0 16px;
 }
 
-.reel-cards-track {
+.reel-marquee-row {
+  display: flex;
+  width: max-content;
+  will-change: transform;
+}
+
+.reel-marquee-row.is-normal {
+  animation: reelMarqueeLeft 50s linear infinite;
+}
+
+.reel-marquee-row.is-reverse {
+  animation: reelMarqueeRight 50s linear infinite;
+}
+
+.reel-marquee-row.is-paused,
+.reel-marquee-wrapper:hover .reel-marquee-row {
+  animation-play-state: paused !important;
+}
+
+.reel-marquee-group {
   display: flex;
   gap: 18px;
-  overflow-x: auto;
-  scroll-behavior: smooth;
-  padding-bottom: 18px;
-  scrollbar-width: none;
+  padding-right: 18px;
+  flex-shrink: 0;
 }
 
-.reel-cards-track::-webkit-scrollbar {
-  display: none;
+@keyframes reelMarqueeLeft {
+  0% {
+    transform: translate3d(0, 0, 0);
+  }
+  100% {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+
+@keyframes reelMarqueeRight {
+  0% {
+    transform: translate3d(-50%, 0, 0);
+  }
+  100% {
+    transform: translate3d(0, 0, 0);
+  }
 }
 
 .reel-card {
-  flex: 0 0 calc(25% - 14px);
-  min-width: 250px;
+  flex: 0 0 255px;
+  width: 255px;
   border-radius: var(--radius-lg);
   overflow: hidden;
   cursor: pointer;
   transition: transform var(--transition-normal);
   outline: none;
   background-color: #101726;
+  filter: none !important;
 }
 
 .reel-card:hover {
@@ -520,6 +554,7 @@ video {
   padding: 20px 14px;
   overflow: hidden;
   background-color: #101726;
+  filter: none !important;
 }
 
 .reel-card-video {
@@ -534,6 +569,7 @@ video {
   opacity: 0;
   pointer-events: none;
   transition: opacity var(--transition-normal);
+  filter: none !important;
 }
 
 .reel-card.is-playing .reel-card-video {
@@ -541,33 +577,9 @@ video {
   pointer-events: auto;
 }
 
+/* NO FILTER ON CARDS */
 .reel-card-overlay {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(180deg,
-      rgba(24, 34, 61, 0.1) 0%,
-      rgba(24, 34, 61, 0.25) 50%,
-      rgba(24, 34, 61, 0.75) 100%);
-  transition: opacity var(--transition-fast);
-  z-index: 1;
-}
-
-.reel-card:hover .reel-card-overlay {
-  background: linear-gradient(180deg,
-      rgba(24, 34, 61, 0.05) 0%,
-      rgba(24, 34, 61, 0.2) 40%,
-      rgba(24, 34, 61, 0.85) 100%);
-}
-
-.reel-card-overlay.playing {
-  background: linear-gradient(180deg,
-      rgba(24, 34, 61, 0.35) 0%,
-      rgba(24, 34, 61, 0) 35%,
-      rgba(24, 34, 61, 0.6) 100%);
-  z-index: 3;
+  display: none !important;
 }
 
 .reel-card-top-controls {
@@ -1148,25 +1160,59 @@ video {
 }
 
 .schedule-cards-wrap {
+  min-width: 0;
   width: 100%;
   overflow: hidden;
+  padding: 6px 0 16px;
 }
 
-.schedule-cards-track {
+.schedule-marquee-row {
+  display: flex;
+  width: max-content;
+  will-change: transform;
+}
+
+.schedule-marquee-row.is-normal {
+  animation: scheduleMarqueeLeft 55s linear infinite;
+}
+
+.schedule-marquee-row.is-reverse {
+  animation: scheduleMarqueeRight 55s linear infinite;
+}
+
+.schedule-marquee-row.is-paused,
+.schedule-cards-wrap:hover .schedule-marquee-row {
+  animation-play-state: paused !important;
+}
+
+.schedule-marquee-group {
   display: flex;
   gap: 20px;
-  overflow-x: auto;
-  scroll-behavior: smooth;
-  padding-bottom: 16px;
-  scrollbar-width: none;
+  padding-right: 20px;
+  flex-shrink: 0;
 }
 
-.schedule-cards-track::-webkit-scrollbar {
-  display: none;
+@keyframes scheduleMarqueeLeft {
+  0% {
+    transform: translate3d(0, 0, 0);
+  }
+  100% {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+
+@keyframes scheduleMarqueeRight {
+  0% {
+    transform: translate3d(-50%, 0, 0);
+  }
+  100% {
+    transform: translate3d(0, 0, 0);
+  }
 }
 
 .eleat-course-card {
   flex: 0 0 300px;
+  width: 300px;
   display: flex;
   flex-direction: column;
   background: #ffffff;
@@ -1174,6 +1220,7 @@ video {
   overflow: hidden;
   transition: transform var(--transition-normal);
   border: 1px solid var(--color-border);
+  filter: none !important;
 }
 
 .eleat-course-card:hover {
@@ -1186,6 +1233,7 @@ video {
   border-radius: var(--radius-lg) var(--radius-lg) 0 0;
   overflow: hidden;
   background-color: var(--color-bg-page);
+  filter: none !important;
 }
 
 .eleat-card-img {
@@ -1193,6 +1241,7 @@ video {
   height: 100%;
   object-fit: cover;
   transition: transform var(--transition-smooth);
+  filter: none !important;
 }
 
 .eleat-course-card:hover .eleat-card-img {
