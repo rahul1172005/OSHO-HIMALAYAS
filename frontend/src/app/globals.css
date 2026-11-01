@@ -1867,27 +1867,9 @@ video {
     display: none;
   }
 
-  /* Hero on mobile: positioned in open sky area in 2 clean lines */
+  /* Hero on mobile: use the full photo with embedded typography and remove the HTML text overlay */
   .hero-content-wrap {
-    padding-top: clamp(160px, 24vh, 215px);
-  }
-
-  .hero-content {
-    transform: translate(
-      var(--hero-text-x-mobile, var(--hero-text-x, 0px)),
-      var(--hero-text-y-mobile, var(--hero-text-y, 0px))
-    );
-  }
-
-  .hero-headline {
-    font-size: 1.2rem;
-    font-weight: 600;
-    color: #18223d;
-    white-space: normal;
-    max-width: 290px;
-    line-height: 1.35;
-    margin: 0 auto;
-    letter-spacing: -0.01em;
+    display: none !important;
   }
 
   /* Reel cards */
