@@ -15,10 +15,32 @@ export default function ReelShowcase() {
   const videoElements = useRef<{ [key: string]: HTMLVideoElement | null }>({});
 
   const togglePause = () => {
+    // If a video is playing, pause all videos and set marquee to paused
+    if (playingId) {
+      Object.entries(videoElements.current).forEach(([k, el]) => {
+        if (el) {
+          el.pause();
+        }
+      });
+      setPlayingId(null);
+      setActiveKey(null);
+      setIsPaused(true);
+      return;
+    }
     setIsPaused((prev) => !prev);
   };
 
   const handleDirection = (dir: "normal" | "reverse") => {
+    // If any video is currently playing, pause it so cards can move freely
+    if (playingId) {
+      Object.entries(videoElements.current).forEach(([k, el]) => {
+        if (el) {
+          el.pause();
+        }
+      });
+      setPlayingId(null);
+      setActiveKey(null);
+    }
     setDirection(dir);
     setIsPaused(false);
   };
@@ -216,7 +238,7 @@ export default function ReelShowcase() {
               )}
             </span>
             <span className="reel-pill-label">
-              {isPlaying ? "Playing with sound" : item.buttonLabel}
+              {isPlaying ? (isMuted ? "Playing (muted)" : "Playing with sound") : item.buttonLabel}
             </span>
           </div>
         </div>

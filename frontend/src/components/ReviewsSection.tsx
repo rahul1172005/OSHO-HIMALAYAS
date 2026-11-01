@@ -12,10 +12,30 @@ export default function ReviewsSection() {
   const videoElements = useRef<{ [key: string]: HTMLVideoElement | null }>({});
 
   const togglePause = () => {
+    if (playingId) {
+      Object.entries(videoElements.current).forEach(([k, el]) => {
+        if (el) {
+          el.pause();
+        }
+      });
+      setPlayingId(null);
+      setActiveKey(null);
+      setIsPaused(true);
+      return;
+    }
     setIsPaused((prev) => !prev);
   };
 
   const handleDirection = (dir: "normal" | "reverse") => {
+    if (playingId) {
+      Object.entries(videoElements.current).forEach(([k, el]) => {
+        if (el) {
+          el.pause();
+        }
+      });
+      setPlayingId(null);
+      setActiveKey(null);
+    }
     setDirection(dir);
     setIsPaused(false);
   };

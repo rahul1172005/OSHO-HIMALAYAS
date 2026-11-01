@@ -585,7 +585,8 @@ video {
 .reel-card-top-controls {
   position: absolute;
   top: 12px;
-  right: 12px;
+  left: 12px;
+  right: auto;
   z-index: 10;
 }
 
