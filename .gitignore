@@ -79,6 +79,8 @@ Thumbs.db
 # Vercel
 .vercel
 
-# Scratch / temporary scripts
+# Scratch / temporary scripts & local backups
 scratch/
+*-prev.*
+*-old.*
 
