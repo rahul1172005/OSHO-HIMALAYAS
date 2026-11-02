@@ -330,7 +330,9 @@ export default function ReviewsSection() {
         {/* SECTION HEADER */}
         <div className="reel-header text-center">
           <span className="reviews-kicker">Real experiences</span>
-          <h2 className="reel-title">Why Meditators Love Us</h2>
+          <h2 className="reel-title">
+            Why <span className="brand-osho">Meditators</span> Love Us
+          </h2>
           <p className="reel-description">
             Hear directly from guests around the world who arrived seeking a break and left with a
             transformed inner life.
@@ -347,7 +349,17 @@ export default function ReviewsSection() {
                 </svg>
               ))}
             </span>
-            <span className="rating-text">4.8 stars out of 1,000+ Google reviews</span>
+            <span className="rating-text">
+              <span>4.8 ( 1000+</span>
+              <img
+                src="/google-icon.png"
+                alt="Google"
+                width={18}
+                height={18}
+                style={{ display: "inline-block", verticalAlign: "middle" }}
+              />
+              <span>reviews)</span>
+            </span>
           </div>
         </div>
       </div>

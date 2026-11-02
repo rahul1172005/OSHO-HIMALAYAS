@@ -340,6 +340,28 @@ export const SCHEDULE_COURSES: ScheduleCourse[] = [
     tagline: "Explore the depths of meditation.",
     image: "https://oshohimalayascom.swipepages.media/2026/8/65426ca89707d10018b3de0d/vigyan-bhairav-tantra-500.webp",
   },
+  // ALL-YEAR IMMERSION RETREATS
+  {
+    id: "omg-experience",
+    title: "OMG Experience",
+    dates: "Open all year",
+    tagline: "An OSHO Meditation Getaway Experience in the Himalayas.",
+    image: "https://oshohimalayascom.swipepages.media/2026/8/65426ca89707d10018b3de0d/omg-experience-500.webp",
+  },
+  {
+    id: "extended-omg-experience",
+    title: "Extended OMG Experience",
+    dates: "Open all year",
+    tagline: "Nothing to do but to go in.",
+    image: "https://oshohimalayascom.swipepages.media/2026/8/65426ca89707d10018b3de0d/living-in-program.webp",
+  },
+  {
+    id: "week-in-silence",
+    title: "A Week In Silence",
+    dates: "Open all year",
+    tagline: "Experience silence that's alive & juicy.",
+    image: "https://oshohimalayascom.swipepages.media/2026/8/65426ca89707d10018b3de0d/week-in-silence.webp",
+  },
 ];
 
 // -----------------------------------------------------------------------------

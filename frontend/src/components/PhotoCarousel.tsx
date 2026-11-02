@@ -153,7 +153,7 @@ export default function PhotoCarousel() {
           <h2 className="photo-carousel-title">It’s time for meditative holidays</h2>
           <p className="photo-carousel-sub">
             Step away from the city noise and come to this valley where you can breathe in the pure
-            air, swim in the fresh spring water, and dive deep into meditation.
+            air, swim in the fresh spring water, and dive deep into OSHO Meditations.
           </p>
         </div>
 

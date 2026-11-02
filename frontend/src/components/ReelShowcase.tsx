@@ -351,9 +351,9 @@ export default function ReelShowcase() {
             Meditation is active and fun in this Himalayan valley
           </h2>
           <p className="reel-description">
-            It’s not just sitting with eyes closed. The inner journey can be rich with a range of
-            techniques and togetherness. Have a glimpse of what your day might look like at OSHO
-            Himalayas.
+            It’s not just sitting with eyes closed. The inner journey can be rich with music,
+            laughter, dance, and OSHO Active Meditations. Have a glimpse of what your day might
+            look like at OSHO Himalayas.
           </p>
           <p className="reel-audio-note">
             *These videos play with audio, with the option to mute.
