@@ -365,9 +365,9 @@ export const SCHEDULE_COURSES: ScheduleCourse[] = [
 ];
 
 // -----------------------------------------------------------------------------
-// SECTION 5: VIDEO TESTIMONIALS
+// SECTION 5: VIDEO TESTIMONIALS (INTERNATIONAL & DOMESTIC VARIANTS)
 // -----------------------------------------------------------------------------
-export const TESTIMONIAL_REVIEWS: TestimonialReview[] = [
+export const TESTIMONIAL_REVIEWS_INTERNATIONAL: TestimonialReview[] = [
   {
     id: "amura",
     name: "Amura",
@@ -423,6 +423,65 @@ export const TESTIMONIAL_REVIEWS: TestimonialReview[] = [
     videoSrc: "/Shilpa from india.mp4",
   },
 ];
+
+export const TESTIMONIAL_REVIEWS_DOMESTIC: TestimonialReview[] = [
+  {
+    id: "guest-experience",
+    name: "Guest",
+    location: "India",
+    quote: "There is something which touches you deeply.",
+    youtubeId: "9MFJETchqh8",
+    thumbnail: "/thumbnails/guest-experience.jpg",
+    videoSrc: "/guest-experience.mp4",
+  },
+  {
+    id: "arpita",
+    name: "Arpita",
+    location: "India",
+    quote: "A truly peaceful and transformative experience.",
+    youtubeId: "_BJXbVKXD4c",
+    thumbnail: "/thumbnails/arpita-india.jpg",
+    videoSrc: "/arpita-india.mp4",
+  },
+  {
+    id: "jagvir-kaur",
+    name: "Jagvir Kaur",
+    location: "India",
+    quote: "If you want a break from hectic daily life, visit here.",
+    youtubeId: "oke3PiUdkOs",
+    thumbnail: "/thumbnails/break-daily-life.jpg",
+    videoSrc: "/break-daily-life.mp4",
+  },
+  {
+    id: "amura",
+    name: "Amura",
+    location: "Germany",
+    quote: "This is the place to discover freedom and peace.",
+    youtubeId: "fn-gh8eBn2g",
+    thumbnail: "https://oshohimalayascom.swipepages.media/2026/8/65426ca89707d10018b3de0d/5-500.webp",
+    videoSrc: "/amura from Germany.mp4",
+  },
+  {
+    id: "ernst",
+    name: "Ernst",
+    location: "Netherlands",
+    quote: "A lot of nice people to be around here.",
+    youtubeId: "4qOl7yRLVFc",
+    thumbnail: "https://oshohimalayascom.swipepages.media/2026/8/65426ca89707d10018b3de0d/4-500.webp",
+    videoSrc: "/Ernst from Netherlands.mp4",
+  },
+  {
+    id: "shilpa",
+    name: "Shilpa",
+    location: "India",
+    quote: "This place itself has such a high energy.",
+    youtubeId: "ycaGlod1fLI",
+    thumbnail: "https://oshohimalayascom.swipepages.media/2026/8/65426ca89707d10018b3de0d/1-500.webp",
+    videoSrc: "/Shilpa from india.mp4",
+  },
+];
+
+export const TESTIMONIAL_REVIEWS: TestimonialReview[] = TESTIMONIAL_REVIEWS_INTERNATIONAL;
 
 // -----------------------------------------------------------------------------
 // SECTION 7: FAQS

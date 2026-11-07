@@ -3,7 +3,11 @@
 import { useState, useRef, useEffect } from "react";
 import { TESTIMONIAL_REVIEWS, TestimonialReview } from "@/lib/landingData";
 
-export default function ReviewsSection() {
+interface ReviewsSectionProps {
+  reviews?: TestimonialReview[];
+}
+
+export default function ReviewsSection({ reviews = TESTIMONIAL_REVIEWS }: ReviewsSectionProps) {
   const [playingId, setPlayingId] = useState<string | null>(null);
   const [activeKey, setActiveKey] = useState<string | null>(null);
   const [isBuffering, setIsBuffering] = useState(false);
@@ -381,10 +385,10 @@ export default function ReviewsSection() {
               isInteracting.current = false;
             }}
           >
-            {TESTIMONIAL_REVIEWS.map((rev) =>
+            {reviews.map((rev) =>
               renderReviewCard(rev, "rev1")
             )}
-            {TESTIMONIAL_REVIEWS.map((rev) =>
+            {reviews.map((rev) =>
               renderReviewCard(rev, "rev2")
             )}
           </div>

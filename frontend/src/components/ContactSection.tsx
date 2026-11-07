@@ -4,9 +4,15 @@ import { useEffect } from "react";
 
 interface ContactSectionProps {
   prefilledCourseTitle?: string;
+  formSource?: string;
 }
 
-export default function ContactSection({ prefilledCourseTitle }: ContactSectionProps) {
+export default function ContactSection({
+  prefilledCourseTitle,
+  formSource = "International",
+}: ContactSectionProps) {
+  const tallyUrl = `https://tally.so/embed/obk9vV?alignLeft=1&hideTitle=1&transparentBackground=1&dynamicHeight=1&formEventsForwarding=1&form_source=${formSource}`;
+
   useEffect(() => {
     // Tally embed initialization script
     const loadTally = () => {
@@ -41,7 +47,7 @@ export default function ContactSection({ prefilledCourseTitle }: ContactSectionP
     };
 
     loadTally();
-  }, []);
+  }, [tallyUrl]);
 
   return (
     <section className="section-contact" id="contact-us">
@@ -69,8 +75,9 @@ export default function ContactSection({ prefilledCourseTitle }: ContactSectionP
         {/* TALLY EMBED FORM CONTAINER */}
         <div className="tally-form-wrapper">
           <iframe
-            data-tally-src="https://tally.so/embed/obk9vV?alignLeft=1&hideTitle=1&transparentBackground=1&dynamicHeight=1"
-            src="https://tally.so/embed/obk9vV?alignLeft=1&hideTitle=1&transparentBackground=1&dynamicHeight=1"
+            key={tallyUrl}
+            data-tally-src={tallyUrl}
+            src={tallyUrl}
             loading="lazy"
             width="100%"
             height="632"
