@@ -440,7 +440,7 @@ export const TESTIMONIAL_REVIEWS_DOMESTIC: TestimonialReview[] = [
     location: "India",
     quote: "If you want a break from hectic daily life, visit here.",
     youtubeId: "oke3PiUdkOs",
-    thumbnail: "https://i.ytimg.com/vi/oke3PiUdkOs/oar1.jpg",
+    thumbnail: "/thumbnails/jagvir-kaur.jpg",
     videoSrc: "/break-daily-life.mp4",
   },
   {
