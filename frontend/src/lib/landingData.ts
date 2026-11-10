@@ -426,15 +426,6 @@ export const TESTIMONIAL_REVIEWS_INTERNATIONAL: TestimonialReview[] = [
 
 export const TESTIMONIAL_REVIEWS_DOMESTIC: TestimonialReview[] = [
   {
-    id: "guest-experience",
-    name: "Guest",
-    location: "India",
-    quote: "There is something which touches you deeply.",
-    youtubeId: "9MFJETchqh8",
-    thumbnail: "/thumbnails/guest-experience.jpg",
-    videoSrc: "/guest-experience.mp4",
-  },
-  {
     id: "arpita",
     name: "Arpita",
     location: "India",
