@@ -462,6 +462,15 @@ export const TESTIMONIAL_REVIEWS_DOMESTIC: TestimonialReview[] = [
     videoSrc: "/Ernst from Netherlands.mp4",
   },
   {
+    id: "kathleen-peter",
+    name: "Kathleen & Peter",
+    location: "Ireland",
+    quote: "We are already booking to come back in summer.",
+    youtubeId: "HmBChf8s6m4",
+    thumbnail: "https://oshohimalayascom.swipepages.media/2026/8/65426ca89707d10018b3de0d/2-500.webp",
+    videoSrc: "/kathleen & peter from ireland.mp4",
+  },
+  {
     id: "shilpa",
     name: "Shilpa",
     location: "India",

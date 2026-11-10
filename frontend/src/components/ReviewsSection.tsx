@@ -20,6 +20,7 @@ export default function ReviewsSection({ reviews = TESTIMONIAL_REVIEWS }: Review
   const videoElements = useRef<{ [key: string]: HTMLVideoElement | null }>({});
   const isInteracting = useRef(false);
   const resumeTimer = useRef<NodeJS.Timeout | null>(null);
+  const isWrapping = useRef(false);
 
   const pauseAllVideos = () => {
     Object.values(videoElements.current).forEach((el) => {
@@ -80,14 +81,19 @@ export default function ReviewsSection({ reviews = TESTIMONIAL_REVIEWS }: Review
 
   // Seamless wrap-around listener for touch, wheel & scroll
   const handleScroll = () => {
+    if (isWrapping.current) return;
     const track = trackRef.current;
     if (!track) return;
     const half = track.scrollWidth / 2;
     if (half > 0) {
       if (track.scrollLeft >= half) {
+        isWrapping.current = true;
         track.scrollLeft -= half;
+        requestAnimationFrame(() => { isWrapping.current = false; });
       } else if (track.scrollLeft <= 0 && direction === "reverse") {
+        isWrapping.current = true;
         track.scrollLeft += half;
+        requestAnimationFrame(() => { isWrapping.current = false; });
       }
     }
   };

@@ -11,6 +11,8 @@ export default function PhotoCarousel() {
   const row2Ref = useRef<HTMLDivElement>(null);
   const isInteracting = useRef(false);
   const resumeTimer = useRef<NodeJS.Timeout | null>(null);
+  const isWrappingR1 = useRef(false);
+  const isWrappingR2 = useRef(false);
 
   const scrollLeft = () => {
     if (row1Ref.current) {
@@ -55,22 +57,36 @@ export default function PhotoCarousel() {
   };
 
   const handleScrollRow1 = () => {
+    if (isWrappingR1.current) return;
     const r1 = row1Ref.current;
     if (!r1) return;
     const half1 = r1.scrollWidth / 2;
     if (half1 > 0 && r1.scrollLeft >= half1) {
+      isWrappingR1.current = true;
       r1.scrollLeft -= half1;
+      requestAnimationFrame(() => { isWrappingR1.current = false; });
     }
   };
 
   const handleScrollRow2 = () => {
+    if (isWrappingR2.current) return;
     const r2 = row2Ref.current;
     if (!r2) return;
     const half2 = r2.scrollWidth / 2;
-    if (half2 > 0 && r2.scrollLeft >= half2) {
-      r2.scrollLeft -= half2;
+    if (half2 > 0 && r2.scrollLeft <= 1) {
+      isWrappingR2.current = true;
+      r2.scrollLeft += half2;
+      requestAnimationFrame(() => { isWrappingR2.current = false; });
     }
   };
+
+  // Init row 2 at midpoint so it has room to scroll in reverse
+  useEffect(() => {
+    requestAnimationFrame(() => {
+      const r2 = row2Ref.current;
+      if (r2 && r2.scrollWidth > 0) r2.scrollLeft = r2.scrollWidth / 2;
+    });
+  }, []);
 
   // Continuous smooth auto-scroll drift with seamless loop wrap-around
   useEffect(() => {
@@ -93,7 +109,7 @@ export default function PhotoCarousel() {
         }
 
         if (r2) {
-          r2.scrollLeft += move;
+          r2.scrollLeft -= move;
         }
       }
 
