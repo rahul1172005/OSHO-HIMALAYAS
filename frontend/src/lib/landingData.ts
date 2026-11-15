@@ -263,13 +263,6 @@ export const SCHEDULE_COURSES: ScheduleCourse[] = [
   },
   // NEW COURSES AFTER MARCH:
   {
-    id: "chakra-experience-mar",
-    title: "The Chakra Experience",
-    dates: "Mar 12 - 16",
-    tagline: "An in-depth course to explore our seven energy centers through meditation.",
-    image: "https://oshohimalayascom.swipepages.media/2026/8/65426ca89707d10018b3de0d/the-chakra-experience-500.webp",
-  },
-  {
     id: "colours-of-life",
     title: "Colours Of Life Festival",
     dates: "Mar 19 - 23",
