@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from "next";
+import Script from "next/script";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -36,6 +37,16 @@ export default function RootLayout({
           rel="stylesheet"
         />
       </head>
+      <Script
+        id="gtm"
+        strategy="afterInteractive"
+        src="https://www.googletagmanager.com/gtm.js?id=GTM-WGXQ6Z5"
+      />
+      <Script id="gtm-init" strategy="afterInteractive">{`
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+      `}</Script>
       <body suppressHydrationWarning>{children}</body>
     </html>
   );

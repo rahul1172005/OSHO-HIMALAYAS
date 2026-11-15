@@ -152,7 +152,6 @@ export const GALLERY_PHOTOS_ROW_1: string[] = [
   "https://oshohimalayascom.swipepages.media/2026/8/65426ca89707d10018b3de0d/6-1.webp",
   "https://oshohimalayascom.swipepages.media/2026/8/65426ca89707d10018b3de0d/7-1.webp",
   "https://oshohimalayascom.swipepages.media/2026/8/65426ca89707d10018b3de0d/8-1.webp",
-  "https://oshohimalayascom.swipepages.media/2026/8/65426ca89707d10018b3de0d/9-1.webp",
   "https://oshohimalayascom.swipepages.media/2026/8/65426ca89707d10018b3de0d/10-1.webp",
   "https://oshohimalayascom.swipepages.media/2026/8/65426ca89707d10018b3de0d/11-1.webp",
   "https://oshohimalayascom.swipepages.media/2026/8/65426ca89707d10018b3de0d/12-1.webp",
@@ -185,13 +184,6 @@ export const GALLERY_PHOTOS: string[] = [
 // - Added all new courses after March from https://wellness.oshohimalayas.com/lp
 // -----------------------------------------------------------------------------
 export const SCHEDULE_COURSES: ScheduleCourse[] = [
-  {
-    id: "festival-of-lights",
-    title: "Festival of Lights",
-    dates: "Nov 06 – 10",
-    tagline: "Explore your inner light in nature.",
-    image: "https://oshohimalayascom.swipepages.media/2026/8/65426ca89707d10018b3de0d/festival-of-lights-500.webp",
-  },
   {
     id: "chakra-experience-nov",
     title: "The Chakra Experience",
@@ -325,13 +317,6 @@ export const SCHEDULE_COURSES: ScheduleCourse[] = [
     dates: "May 06 - 10",
     tagline: "Master your emotions. Turn negative emotions into positive ones and experience peace.",
     image: "https://oshohimalayascom.swipepages.media/2026/8/65426ca89707d10018b3de0d/omg-experience-500.webp",
-  },
-  {
-    id: "chakra-experience-may",
-    title: "The Chakra Experience",
-    dates: "May 19 - 24",
-    tagline: "An in-depth course to explore our seven energy centers through meditation.",
-    image: "https://oshohimalayascom.swipepages.media/2026/8/65426ca89707d10018b3de0d/the-chakra-experience-500.webp",
   },
   {
     id: "vigyan-bhairav-may",

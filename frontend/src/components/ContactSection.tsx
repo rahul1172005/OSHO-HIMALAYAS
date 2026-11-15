@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 interface ContactSectionProps {
   prefilledCourseTitle?: string;
@@ -11,7 +11,23 @@ export default function ContactSection({
   prefilledCourseTitle,
   formSource = "International",
 }: ContactSectionProps) {
-  const tallyUrl = `https://tally.so/embed/obk9vV?alignLeft=1&hideTitle=1&transparentBackground=1&dynamicHeight=1&formEventsForwarding=1&form_source=${formSource}`;
+  const baseUrl = `https://tally.so/embed/obk9vV?alignLeft=1&hideTitle=1&transparentBackground=1&dynamicHeight=1&formEventsForwarding=1&form_source=${encodeURIComponent(formSource)}`;
+  const [tallyUrl, setTallyUrl] = useState(baseUrl);
+
+  // Enrich Tally URL with UTM params from the page URL (runs once on mount)
+  useEffect(() => {
+    const url = new URL(baseUrl);
+    const search = new URLSearchParams(window.location.search);
+    ["utm_source", "utm_medium", "utm_campaign", "utm_term", "utm_content"].forEach((key) => {
+      const val = search.get(key) ?? sessionStorage.getItem(key) ?? "";
+      if (val) {
+        sessionStorage.setItem(key, val);
+        url.searchParams.set(key, val);
+      }
+    });
+    setTallyUrl(url.toString());
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []); // intentionally runs once; baseUrl in deps would cause a loop
 
   useEffect(() => {
     // Tally embed initialization script
@@ -42,6 +58,9 @@ export default function ContactSection({
             });
           };
           d.body.appendChild(s);
+        } else {
+          // @ts-expect-error Tally global
+          if (typeof window.Tally !== "undefined") window.Tally.loadEmbeds();
         }
       }
     };
