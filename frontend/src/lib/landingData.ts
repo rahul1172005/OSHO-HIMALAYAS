@@ -185,13 +185,6 @@ export const GALLERY_PHOTOS: string[] = [
 // -----------------------------------------------------------------------------
 export const SCHEDULE_COURSES: ScheduleCourse[] = [
   {
-    id: "chakra-experience-nov",
-    title: "The Chakra Experience",
-    dates: "Nov 12 - 16",
-    tagline: "An in-depth course to explore our seven energy centers through meditation.",
-    image: "https://oshohimalayascom.swipepages.media/2026/8/65426ca89707d10018b3de0d/the-chakra-experience-500.webp",
-  },
-  {
     id: "tantra-alchemy",
     title: "Tantra: The Inner Alchemy",
     dates: "Nov 20 - 25",
