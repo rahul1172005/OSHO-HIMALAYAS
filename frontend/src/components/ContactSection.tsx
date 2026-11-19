@@ -18,7 +18,7 @@ export default function ContactSection({
   useEffect(() => {
     const url = new URL(baseUrl);
     const search = new URLSearchParams(window.location.search);
-    ["utm_source", "utm_medium", "utm_campaign", "utm_term", "utm_content"].forEach((key) => {
+    ["utm_source", "utm_medium", "utm_campaign", "utm_term", "utm_content", "gclid", "fbclid"].forEach((key) => {
       const val = search.get(key) ?? sessionStorage.getItem(key) ?? "";
       if (val) {
         sessionStorage.setItem(key, val);
